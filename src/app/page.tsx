@@ -1,12 +1,58 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/logo';
 import { Typewriter } from '@/components/typewriter';
-import { AnimatedBackground } from '@/components/animated-background';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, PartyPopper } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useEffect } from 'react';
+
+const fakeSales = [
+  'Maria S. (SP)',
+  'João P. (RJ)',
+  'Ana C. (MG)',
+  'Carlos A. (BA)',
+  'Fernanda L. (RS)',
+  'Lucas M. (PR)',
+  'Juliana R. (CE)',
+  'Rafael G. (PE)',
+  'Patrícia F. (DF)',
+  'Bruno T. (ES)',
+];
 
 export default function Home() {
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const showRandomToast = () => {
+      const randomSale = fakeSales[Math.floor(Math.random() * fakeSales.length)];
+      const randomDelay = Math.random() * (15000 - 7000) + 7000; // Between 7-15 seconds
+
+      setTimeout(() => {
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <PartyPopper className="h-5 w-5 text-primary" />
+              <span className="font-bold">Compra Aprovada!</span>
+            </div>
+          ),
+          description: `${randomSale} acabou de gerar seus números da sorte.`,
+        });
+        showRandomToast(); // Schedule the next one
+      }, randomDelay);
+    };
+
+    // Start the loop
+    const firstTimeout = setTimeout(showRandomToast, 5000); // First toast after 5 seconds
+
+    return () => {
+      clearTimeout(firstTimeout);
+    };
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground">
       

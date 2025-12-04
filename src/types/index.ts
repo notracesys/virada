@@ -6,3 +6,9 @@ export type AccessCode = {
     usedAt: string | null;
     generatedNumbers: number[] | null;
 };
+
+export type User = {
+    id: string;
+    email: string;
+    registrationDate: string; // Formatado como string
+};

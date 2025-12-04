@@ -73,8 +73,9 @@ export default function Home() {
         <div className="mt-6 h-12 md:h-8 text-base md:text-lg text-muted-foreground max-w-xs md:max-w-none">
           <Typewriter text="Este site consiste em números que foram estudados e gerados por especialistas." speed={50} />
         </div>
-        <Button asChild size="lg" className="mt-12 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-6 shadow-lg transition-all duration-300">
+        <Button asChild size="lg" className="relative overflow-hidden mt-12 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-6 shadow-lg transition-all duration-300">
           <Link href="/pricing">
+            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent transform -translate-x-full animate-shine" />
             QUERO GERAR MEUS NÚMEROS
           </Link>
         </Button>

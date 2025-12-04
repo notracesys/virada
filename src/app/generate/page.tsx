@@ -1,48 +1,63 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from 'next/link';
 import ProcessingScreen from './components/processing-screen';
 import ResultsScreen from './components/results-screen';
 import { AnimatedBackground } from '@/components/animated-background';
+import AccessCodeScreen from './components/access-code-screen';
 
-type Stage = 'processing' | 'results';
+type Stage = 'access_code' | 'processing' | 'results' | 'error';
 
 export default function GeneratePage() {
-  const [stage, setStage] = useState<Stage>('processing');
-  // Números de exemplo para exibir quando o processamento terminar
+  const [stage, setStage] = useState<Stage>('access_code');
   const [numbers, setNumbers] = useState<number[]>([]);
+  const [error, setError] = useState('');
+
+  const handleCodeSubmit = async (code: string) => {
+    // Aqui você faria a chamada para verificar o código.
+    // Por enquanto, vamos simular que qualquer código é válido.
+    if (code) {
+      setStage('processing');
+    } else {
+      setError('Por favor, insira um código de acesso.');
+    }
+  };
 
   useEffect(() => {
-    // Simula um processo de geração
-    const timer = setTimeout(() => {
-      // Gera 6 números aleatórios entre 1 e 60
-      const randomNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 60) + 1);
-      // Garante que são únicos
-      const uniqueNumbers = [...new Set(randomNumbers)];
-      while(uniqueNumbers.length < 6) {
-        uniqueNumbers.push(Math.floor(Math.random() * 60) + 1);
-      }
-      
-      setNumbers(uniqueNumbers.sort((a, b) => a - b));
-      setStage('results');
-    }, 4000); // 4 segundos para a animação de processamento
+    if (stage === 'processing') {
+      const timer = setTimeout(() => {
+        const randomNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 60) + 1);
+        const uniqueNumbers = [...new Set(randomNumbers)];
+        while (uniqueNumbers.length < 6) {
+          uniqueNumbers.push(Math.floor(Math.random() * 60) + 1);
+        }
+        setNumbers(uniqueNumbers.sort((a, b) => a - b));
+        setStage('results');
+      }, 4000);
 
-    return () => clearTimeout(timer);
-  }, []);
+      return () => clearTimeout(timer);
+    }
+  }, [stage]);
 
   const handleReset = () => {
-    // Recarrega a página para simular uma nova geração
-     window.location.reload();
-  }
+    setStage('access_code');
+    setNumbers([]);
+    setError('');
+  };
 
   const renderMainContent = () => {
     switch (stage) {
+      case 'access_code':
+        return <AccessCodeScreen onSubmit={handleCodeSubmit} error={error} />;
       case 'processing':
         return <ProcessingScreen />;
       case 'results':
         return <ResultsScreen numbers={numbers} onReset={handleReset} />;
       default:
-        return <ProcessingScreen />;
+        return <AccessCodeScreen onSubmit={handleCodeSubmit} error={error} />;
     }
   };
 

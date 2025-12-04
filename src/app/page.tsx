@@ -76,13 +76,13 @@ export default function Home() {
           <Typewriter text="Sugestões de números com base em análise estatística e IA." speed={50} />
         </div>
         <Button asChild size="lg" className="mt-12 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-4 md:py-6 shadow-lg transition-all duration-300">
-          <Link href="/generate">
-            GERAR NÚMEROS (ACESSO PAGO)
+          <Link href="#sales-section">
+            QUERO GERAR MEUS NÚMEROS
           </Link>
         </Button>
       </div>
 
-      <div className="relative z-10 w-full bg-secondary py-10 md:py-20 px-4">
+      <div id="sales-section" className="relative z-10 w-full bg-secondary py-10 md:py-20 px-4">
         <div className="mx-auto max-w-4xl">
           <Card className="bg-background">
             <CardHeader>
@@ -124,6 +124,13 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+               <div className="text-center pt-8">
+                <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-4 md:py-6 shadow-lg transition-all duration-300">
+                    <Link href="https://pay.kirvano.com/CHECKOUT_URL">
+                        SIM, QUERO ACESSO IMEDIATO!
+                    </Link>
+                </Button>
+               </div>
               <p className="text-center text-primary/80 font-bold pt-6 text-sm">
                 Dados provenientes de algoritmo preditivo interno. Canal Confidencial – Apenas Membros.
               </p>

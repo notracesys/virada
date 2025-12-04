@@ -1,34 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Link from 'next/link';
 import ProcessingScreen from './components/processing-screen';
 import ResultsScreen from './components/results-screen';
 import { AnimatedBackground } from '@/components/animated-background';
-import AccessCodeScreen from './components/access-code-screen';
+import { Button } from '@/components/ui/button';
 
-type Stage = 'access_code' | 'processing' | 'results' | 'error';
+type Stage = 'initial' | 'processing' | 'results';
 
 export default function GeneratePage() {
-  const [stage, setStage] = useState<Stage>('access_code');
+  const [stage, setStage] = useState<Stage>('initial');
   const [numbers, setNumbers] = useState<number[]>([]);
-  const [error, setError] = useState('');
 
-  const handleCodeSubmit = async (code: string) => {
-    // Aqui você faria a chamada para verificar o código.
-    // Por enquanto, vamos simular que qualquer código é válido.
-    if (code) {
-      setStage('processing');
-    } else {
-      setError('Por favor, insira um código de acesso.');
-    }
+  const handleStart = () => {
+    setStage('processing');
   };
 
   useEffect(() => {
     if (stage === 'processing') {
       const timer = setTimeout(() => {
+        // Simulação de geração de números
         const randomNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 60) + 1);
         const uniqueNumbers = [...new Set(randomNumbers)];
         while (uniqueNumbers.length < 6) {
@@ -36,28 +27,39 @@ export default function GeneratePage() {
         }
         setNumbers(uniqueNumbers.sort((a, b) => a - b));
         setStage('results');
-      }, 4000);
+      }, 4000); // Simula o tempo de processamento
 
       return () => clearTimeout(timer);
     }
   }, [stage]);
 
   const handleReset = () => {
-    setStage('access_code');
+    setStage('initial');
     setNumbers([]);
-    setError('');
   };
 
   const renderMainContent = () => {
     switch (stage) {
-      case 'access_code':
-        return <AccessCodeScreen onSubmit={handleCodeSubmit} error={error} />;
+      case 'initial':
+        return (
+            <div className="text-center">
+                <h1 className="text-2xl font-headline text-primary mb-4">Pronto para Gerar?</h1>
+                <p className="text-muted-foreground mb-6">Clique no botão abaixo para iniciar a análise da IA.</p>
+                <Button onClick={handleStart} size="lg">Iniciar Geração</Button>
+            </div>
+        )
       case 'processing':
         return <ProcessingScreen />;
       case 'results':
         return <ResultsScreen numbers={numbers} onReset={handleReset} />;
       default:
-        return <AccessCodeScreen onSubmit={handleCodeSubmit} error={error} />;
+         return (
+            <div className="text-center">
+                <h1 className="text-2xl font-headline text-primary mb-4">Pronto para Gerar?</h1>
+                <p className="text-muted-foreground mb-6">Clique no botão abaixo para iniciar a análise da IA.</p>
+                <Button onClick={handleStart} size="lg">Iniciar Geração</Button>
+            </div>
+        )
     }
   };
 

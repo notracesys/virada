@@ -28,32 +28,36 @@ export default function Home() {
   useEffect(() => {
     const showRandomToast = () => {
       const randomSale = fakeSales[Math.floor(Math.random() * fakeSales.length)];
-      const randomDelay = Math.random() * (15000 - 7000) + 7000; // Between 7-15 seconds
-
-      setTimeout(() => {
-        toast({
-          title: (
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-400" />
-              <div className='flex flex-col'>
-                <span className="font-bold text-white text-xs">Geração Concluída!</span>
-                <span className="text-gray-300 text-[10px]">{`${randomSale} acabou de gerar seus números.`}</span>
-              </div>
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-green-400" />
+            <div className='flex flex-col'>
+              <span className="font-bold text-white text-xs">Geração Concluída!</span>
+              <span className="text-gray-300 text-[10px]">{`${randomSale} acabou de gerar seus números.`}</span>
             </div>
-          ),
-        });
-        showRandomToast(); // Schedule the next one
-      }, randomDelay);
+          </div>
+        ),
+      });
     };
 
-    // Start the loop
-    const firstTimeout = setTimeout(showRandomToast, 5000); // First toast after 5 seconds
+    // Show the first toast after a short delay
+    const firstTimeout = setTimeout(() => {
+      showRandomToast();
+      // Then set an interval for every 10 seconds
+      const intervalId = setInterval(showRandomToast, 10000);
 
+      // Return a cleanup function for the interval
+      return () => clearInterval(intervalId);
+    }, 5000);
+
+
+    // Cleanup function for the initial timeout
     return () => {
       clearTimeout(firstTimeout);
     };
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [toast]);
+
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground">

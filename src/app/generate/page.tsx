@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProcessingScreen from './components/processing-screen';
 import ResultsScreen from './components/results-screen';
@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 
 type Stage = 'processing' | 'results' | 'error' | 'loading';
 
-export default function GeneratePage() {
+function GeneratePageContent() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
 
@@ -20,11 +20,9 @@ export default function GeneratePage() {
   const [numbers, setNumbers] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  // Ref para garantir que a verificação rode apenas uma vez.
   const hasVerified = useRef(false);
 
   useEffect(() => {
-    // Se a verificação já ocorreu ou os números já foram gerados, não faça nada.
     if (hasVerified.current || numbers.length > 0) {
       return;
     }
@@ -41,7 +39,6 @@ export default function GeneratePage() {
 
     const checkCode = async () => {
       setStage('processing');
-      // Marque que a verificação foi iniciada.
       hasVerified.current = true; 
       try {
         const result = await verifyAccessCode(code, numberOfNumbers);
@@ -69,11 +66,9 @@ export default function GeneratePage() {
     };
 
     checkCode();
-    // A dependência agora é apenas o searchParams, garantindo que rode uma vez por visita.
   }, [searchParams, numbers.length, toast]);
 
   const handleReset = () => {
-    // Navegar para a página de preços para inserir outro código
     window.location.href = '/pricing';
   };
 
@@ -100,12 +95,18 @@ export default function GeneratePage() {
         return <ProcessingScreen />;
     }
   };
+  
+  return renderMainContent();
+}
 
+export default function GeneratePage() {
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-4 bg-background">
       <AnimatedBackground />
       <div className="relative z-10 flex w-full flex-col items-center justify-center">
-        {renderMainContent()}
+        <Suspense fallback={<ProcessingScreen />}>
+          <GeneratePageContent />
+        </Suspense>
       </div>
     </div>
   );

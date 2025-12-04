@@ -1,17 +1,10 @@
-// Cole aqui o conteúdo do seu arquivo JSON de credenciais da conta de serviço do Firebase.
-// Exemplo:
-//
-// export const serviceAccount = {
-//   "type": "service_account",
-//   "project_id": "seu-projeto-id",
-//   "private_key_id": "...",
-//   "private_key": "...",
-//   "client_email": "...",
-//   "client_id": "...",
-//   "auth_uri": "...",
-//   "token_uri": "...",
-//   "auth_provider_x509_cert_url": "...",
-//   "client_x509_cert_url": "..."
-// };
+// INSTRUÇÕES:
+// 1. Obtenha o arquivo JSON da sua conta de serviço no Console do Firebase.
+// (Configurações do Projeto > Contas de Serviço > Gerar nova chave privada)
+// 2. Abra o arquivo JSON que você baixou.
+// 3. Copie TODO o conteúdo do arquivo JSON.
+// 4. Substitua o objeto vazio `{}` na linha abaixo pelo conteúdo que você copiou.
+
+// Exemplo: export const serviceAccount = { "type": "service_account", ... };
 
 export const serviceAccount = {};

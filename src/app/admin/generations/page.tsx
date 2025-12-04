@@ -4,12 +4,13 @@ import { Ticket } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
-import { collection, query, where, orderBy } from "firebase/firestore";
+import { collection, query, orderBy } from "firebase/firestore";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { AccessCode } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import React from "react";
 
 function GenerationsTable({ generations, isLoading }: { generations: AccessCode[] | null, isLoading: boolean }) {
     if (isLoading) {
@@ -66,22 +67,34 @@ function GenerationsTable({ generations, isLoading }: { generations: AccessCode[
 export default function AdminGenerationsPage() {
     const firestore = useFirestore();
 
-    const generationsQuery = useMemoFirebase(() => {
+    // Query for all access codes, ordering by creation date as a fallback.
+    const allCodesQuery = useMemoFirebase(() => {
         if (!firestore) return null;
-        // Query for access codes that have been used, ordered by when they were used
         return query(
             collection(firestore, 'access_codes'), 
-            where('isUsed', '==', true),
-            orderBy('usedAt', 'desc')
+            orderBy('createdAt', 'desc')
         );
     }, [firestore]);
 
-    const { data: rawGenerations, isLoading } = useCollection(generationsQuery);
+    const { data: rawCodes, isLoading } = useCollection(allCodesQuery);
 
-    const generations: AccessCode[] | null = useMemoFirebase(() => {
-        if (!rawGenerations) return null;
-        return rawGenerations.map(doc => ({
-            id: doc.id, // The document ID is the code itself
+    const generations: AccessCode[] | null = React.useMemo(() => {
+        if (!rawCodes) return null;
+
+        // Filter and sort on the client-side
+        const usedCodes = rawCodes.filter(doc => doc.isUsed === true);
+        
+        // Sort by usedAt date, descending
+        usedCodes.sort((a, b) => {
+            // @ts-ignore
+            const dateA = a.usedAt?.toDate ? a.usedAt.toDate().getTime() : 0;
+            // @ts-ignore
+            const dateB = b.usedAt?.toDate ? b.usedAt.toDate().getTime() : 0;
+            return dateB - dateA;
+        });
+
+        return usedCodes.map(doc => ({
+            id: doc.id,
             email: doc.email,
             isUsed: doc.isUsed,
             generatedNumbers: doc.generatedNumbers,
@@ -90,7 +103,7 @@ export default function AdminGenerationsPage() {
             // @ts-ignore
             usedAt: doc.usedAt?.toDate ? format(doc.usedAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : 'N/A',
         }));
-    }, [rawGenerations]);
+    }, [rawCodes]);
 
     return (
         <div className="space-y-6">

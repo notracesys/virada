@@ -43,21 +43,23 @@ service cloud.firestore {
       allow update: if isExistingOwner(userId) && isUserDataImmutable();
       allow delete: if false;
     }
-
+    
     /**
-     * @description Controls access to unique, one-time-use access codes.
-     * @path /access_codes/{docId}
-     * @allow (get, list, create): Admin can manage all access codes.
-     * @allow (update): A code can only be updated if it's being marked as 'used' and wasn't used before.
-     * @deny (delete): Codes should not be deletable by clients.
+     * @description Collection-level rules for access codes.
+     * @allow (list, create): Admins can list and create codes.
      */
-    match /access_codes/{docId} {
-      allow get, list, create: if isAdmin();
-      allow update: if isSignedIn()
+    match /access_codes/{codeId} {
+        // Individual document rules
+        allow get: if isAdmin();
+        allow update: if isSignedIn()
                      && request.resource.data.isUsed == true
                      && resource.data.isUsed == false
                      && request.resource.data.keys().hasAll(['isUsed', 'generatedNumbers', 'usedAt']);
-      allow delete: if false;
+        allow create: if isAdmin();
+        allow delete: if false;
+        
+        // Collection-level query rule
+        allow list: if isAdmin();
     }
   }
 }

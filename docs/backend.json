@@ -1,0 +1,173 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Mega Hacker Virada platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "registrationDate": {
+          "type": "string",
+          "description": "Date and time when the user registered.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "registrationDate"
+      ]
+    },
+    "NumberGenerationRequest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "NumberGenerationRequest",
+      "type": "object",
+      "description": "Represents a request by a user to generate a set of numbers.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the NumberGenerationRequest entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N NumberGenerationRequest)"
+        },
+        "requestDate": {
+          "type": "string",
+          "description": "Date and time when the number generation was requested.",
+          "format": "date-time"
+        },
+        "generatedNumbers": {
+          "type": "array",
+          "description": "The set of numbers generated for the request. There should be 6 numbers.",
+          "items": {
+            "type": "number"
+          }
+        },
+        "paymentTransactionId": {
+          "type": "string",
+          "description": "Reference to PaymentTransaction. (Relationship: PaymentTransaction 1:1 NumberGenerationRequest)"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "requestDate",
+        "generatedNumbers",
+        "paymentTransactionId"
+      ]
+    },
+    "PaymentTransaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PaymentTransaction",
+      "type": "object",
+      "description": "Represents a payment transaction made by a user for number generation.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the PaymentTransaction entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N PaymentTransaction)"
+        },
+        "transactionDate": {
+          "type": "string",
+          "description": "Date and time of the payment transaction.",
+          "format": "date-time"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount paid in the transaction."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the payment transaction (e.g., pending, completed, failed)."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "transactionDate",
+        "amount",
+        "status"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. Path-based ownership for user data.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/numberGenerationRequests/{numberGenerationRequestId}",
+        "definition": {
+          "entityName": "NumberGenerationRequest",
+          "schema": {
+            "$ref": "#/backend/entities/NumberGenerationRequest"
+          },
+          "description": "Stores number generation requests for a specific user. Path-based ownership ensures only the user can access their requests.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "numberGenerationRequestId",
+              "description": "The unique identifier of the number generation request."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/paymentTransactions/{paymentTransactionId}",
+        "definition": {
+          "entityName": "PaymentTransaction",
+          "schema": {
+            "$ref": "#/backend/entities/PaymentTransaction"
+          },
+          "description": "Stores payment transactions for a specific user. Path-based ownership ensures only the user can access their payment information.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "paymentTransactionId",
+              "description": "The unique identifier of the payment transaction."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to securely manage user data, number generation requests, and payment transactions for the 'Mega Hacker Virada' application. The structure follows a path-based ownership model for user-related data, ensuring clear ownership and simplified security rules. This ensures that list operations are secure and predictable, and that authorization logic is clear and maintainable.\n\n**Authorization Independence:** This design enforces authorization independence by avoiding `get()` calls in security rules. All authorization is based on `request.auth.uid` and path-based ownership, ensuring that data access can be validated without needing to retrieve parent documents. This is achieved by structuring data in hierarchical paths, making it straightforward to apply rules based on user ID.\n\n**QAPs Support:**\n*   Secure List Operations: By segregating data into user-specific collections (e.g., `/users/{userId}/numberGenerationRequests`), listing operations can be secured by simply checking if `request.auth.uid == userId`. There's no need for complex filtering in rules.\n\n**Explanation of Structure:**\n*   `/users/{userId}`: Stores user profiles, acting as the root for all user-owned data.\n*   `/users/{userId}/numberGenerationRequests/{numberGenerationRequestId}`: Stores number generation requests associated with a specific user. This hierarchical structure ensures that only the user (or an admin, managed out-of-scope) can access their own requests.\n*   `/users/{userId}/paymentTransactions/{paymentTransactionId}`: Stores payment transactions made by a user. Similar to number generation requests, this ensures that only the user can access their payment information.\n\nThis design promotes clarity, security, and scalability, aligning with the core design principles and strategy mandates. It simplifies security rules, enables atomic operations, and supports the integrity of user data."
+  }
+}

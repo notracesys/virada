@@ -96,7 +96,7 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'matrix-rain': 'matrix-rain linear infinite',
         'logo-entry': 'logo-entry 2s ease-out forwards',
-        'shine': 'shine 1.5s ease-out',
+        'shine': 'shine 1.5s ease-out infinite',
       },
     },
   },

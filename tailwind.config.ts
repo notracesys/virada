@@ -10,9 +10,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
-        code: ['monospace'],
+        body: ['"Source Code Pro"', 'monospace'],
+        headline: ['"Source Code Pro"', 'monospace'],
+        code: ['"Source Code Pro"', 'monospace'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -88,10 +88,20 @@ export default {
             height: '0',
           },
         },
+        'matrix-rain': {
+          from: { transform: 'translateY(-100vh) scale(1.5)' },
+          to: { transform: 'translateY(100vh) scale(1.5)' },
+        },
+        'logo-entry': {
+          '0%': { opacity: '0', transform: 'scale(0.8)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'matrix-rain': 'matrix-rain linear infinite',
+        'logo-entry': 'logo-entry 2s ease-out forwards',
       },
     },
   },

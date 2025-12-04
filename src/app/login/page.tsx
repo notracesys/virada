@@ -1,10 +1,7 @@
 'use client';
 
-import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { login, type LoginState } from './actions';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,45 +11,58 @@ import { Logo } from "@/components/logo";
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-import { useUser } from '@/firebase';
-
-const initialState: LoginState = {
-  success: false,
-  message: null,
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={pending}>
-      {pending ? 'Autenticando...' : 'Autenticar'}
-    </Button>
-  );
-}
+import { useAuth, useUser } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function LoginPage() {
-  const [state, formAction] = useActionState(login, initialState);
   const router = useRouter();
   const { toast } = useToast();
   const { user, isUserLoading } = useUser();
+  const auth = useAuth();
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+  
+  // Efeito para redirecionar se o usuário já estiver logado
   useEffect(() => {
-    // If user is already logged in, redirect them to the admin dashboard
     if (!isUserLoading && user) {
       router.push('/admin');
     }
   }, [user, isUserLoading, router]);
-  
-  useEffect(() => {
-    if (state.success) {
-      toast({
-        title: 'Sucesso!',
-        description: state.message || 'Login realizado com sucesso.',
-      });
-      // Redirect to admin dashboard on successful login
-      router.push('/admin');
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!email || !password) {
+      setError('E-mail e senha são obrigatórios.');
+      return;
     }
-  }, [state, router, toast]);
+
+    startTransition(async () => {
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        toast({
+          title: 'Sucesso!',
+          description: 'Login realizado com sucesso.',
+        });
+        router.push('/admin');
+      } catch (err: any) {
+        let errorMessage = 'Falha na autenticação. Verifique suas credenciais.';
+        if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+          errorMessage = 'Credenciais inválidas. Por favor, tente novamente.';
+        }
+        setError(errorMessage);
+        toast({
+          variant: 'destructive',
+          title: 'Erro de Autenticação',
+          description: errorMessage,
+        });
+      }
+    });
+  };
   
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4 bg-background">
@@ -63,29 +73,47 @@ export default function LoginPage() {
           <CardTitle className="font-headline text-2xl text-primary">Acesso Restrito</CardTitle>
           <CardDescription>Painel Administrativo - Apenas para autorizados.</CardDescription>
         </CardHeader>
-        <form action={formAction}>
-          <fieldset disabled={isUserLoading} className="group">
+        <form onSubmit={handleLogin}>
+          <fieldset disabled={isUserLoading || isPending} className="group">
             <CardContent className="space-y-4">
-               {state.message && !state.success && (
+               {error && (
                   <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
                       <AlertTitle>Erro de Autenticação</AlertTitle>
                       <AlertDescription>
-                          {state.message}
+                          {error}
                       </AlertDescription>
                   </Alert>
               )}
               <div className="space-y-2">
                 <Label htmlFor="email">E-mail de Acesso</Label>
-                <Input id="email" name="email" type="email" placeholder="user@email.com" required />
+                <Input 
+                  id="email" 
+                  name="email" 
+                  type="email" 
+                  placeholder="user@email.com" 
+                  required 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Chave de Segurança</Label>
-                <Input id="password" name="password" type="password" placeholder="************" required />
+                <Input 
+                  id="password" 
+                  name="password" 
+                  type="password" 
+                  placeholder="************" 
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
             </CardContent>
             <CardFooter>
-              <SubmitButton />
+              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isUserLoading || isPending}>
+                {isPending ? 'Autenticando...' : 'Autenticar'}
+              </Button>
             </CardFooter>
           </fieldset>
         </form>

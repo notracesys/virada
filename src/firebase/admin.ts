@@ -1,3 +1,7 @@
+// Import dotenv and configure it at the very top.
+import { config } from 'dotenv';
+config();
+
 import admin from 'firebase-admin';
 
 // Esta é a função central que garante que o Firebase Admin seja inicializado apenas uma vez.
@@ -27,6 +31,4 @@ function initializeAdminApp() {
 }
 
 // Exporta a função para ser usada pelas Server Actions.
-// E também exporta a instância do admin para acesso a tipos e outros utilitários.
 export { initializeAdminApp };
-export default admin;

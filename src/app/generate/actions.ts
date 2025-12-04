@@ -1,9 +1,8 @@
 'use server';
 
 import { generateMegaNumbers } from '@/ai/flows/generate-mega-numbers';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { initializeAdminApp } from '@/firebase/admin';
-import { Timestamp } from 'firebase-admin/firestore';
 
 export async function verifyAccessCode(code: string): Promise<{ success: boolean; numbers?: number[]; error?: string; }> {
     if (!code) {

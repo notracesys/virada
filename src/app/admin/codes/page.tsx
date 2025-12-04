@@ -1,43 +1,88 @@
+'use client';
+
 import { KeyRound } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { initializeFirebase } from "@/firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
+import { collection, query, orderBy } from "firebase/firestore";
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { AccessCode } from "@/types";
+import type { AccessCode } from "@/types";
 import { GenerateCodeForm } from "./components/generate-code-form";
+import { Skeleton } from "@/components/ui/skeleton";
 
-async function getAccessCodes(): Promise<AccessCode[]> {
-    try {
-        const { firestore } = initializeFirebase();
-        const codesCollection = collection(firestore, 'access_codes');
-        const q = query(codesCollection, orderBy('createdAt', 'desc'));
-        const querySnapshot = await getDocs(q);
-        
-        const codes = querySnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-                id: data.codeId, // Usando o campo codeId que armazenamos
-                email: data.email,
-                isUsed: data.isUsed,
-                createdAt: data.createdAt?.toDate ? format(data.createdAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : 'N/A',
-                usedAt: data.usedAt?.toDate ? format(data.usedAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : null,
-                generatedNumbers: data.generatedNumbers,
-            } as AccessCode;
-        });
-
-        return codes;
-    } catch (error) {
-        console.error("Error fetching access codes: ", error);
-        return [];
+function CodesTable({ codes, isLoading }: { codes: AccessCode[] | null, isLoading: boolean }) {
+    if (isLoading) {
+        return (
+            <div className="space-y-2">
+                {[...Array(5)].map((_, i) => (
+                    <div key={i} className="flex items-center space-x-4 p-2">
+                        <Skeleton className="h-4 flex-grow" />
+                        <Skeleton className="h-4 flex-grow" />
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-4 w-32" />
+                    </div>
+                ))}
+            </div>
+        );
     }
+
+    if (!codes || codes.length === 0) {
+        return <p className="text-center text-muted-foreground py-8">Nenhum código encontrado.</p>
+    }
+
+    return (
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead>Código</TableHead>
+                    <TableHead>E-mail</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Criado em</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {codes.map((code) => (
+                    <TableRow key={code.id}>
+                        <TableCell className="font-mono">{code.id}</TableCell>
+                        <TableCell>{code.email}</TableCell>
+                        <TableCell>
+                            <Badge variant={code.isUsed ? 'destructive' : 'default'}>
+                                {code.isUsed ? 'Usado' : 'Disponível'}
+                            </Badge>
+                        </TableCell>
+                        <TableCell>{code.createdAt}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    );
 }
 
+export default function AdminCodesPage() {
+    const firestore = useFirestore();
 
-export default async function AdminCodesPage() {
-    const codes = await getAccessCodes();
+    const codesQuery = useMemoFirebase(() => {
+        if (!firestore) return null;
+        return query(collection(firestore, 'access_codes'), orderBy('createdAt', 'desc'));
+    }, [firestore]);
+
+    const { data: rawCodes, isLoading } = useCollection(codesQuery);
+
+    const codes: AccessCode[] | null = useMemoFirebase(() => {
+        if (!rawCodes) return null;
+        return rawCodes.map(doc => ({
+            id: doc.codeId,
+            email: doc.email,
+            isUsed: doc.isUsed,
+            // @ts-ignore
+            createdAt: doc.createdAt?.toDate ? format(doc.createdAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : 'N/A',
+            // @ts-ignore
+            usedAt: doc.usedAt?.toDate ? format(doc.usedAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : null,
+            generatedNumbers: doc.generatedNumbers,
+        }));
+    }, [rawCodes]);
 
     return (
         <div className="space-y-6">
@@ -53,7 +98,7 @@ export default async function AdminCodesPage() {
                         <CardDescription>Insira o e-mail do cliente para criar um novo código de acesso único.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                       <GenerateCodeForm />
+                        <GenerateCodeForm />
                     </CardContent>
                 </Card>
 
@@ -63,30 +108,7 @@ export default async function AdminCodesPage() {
                         <CardDescription>Lista de todos os códigos de acesso criados.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Código</TableHead>
-                                    <TableHead>E-mail</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Criado em</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {codes.map((code) => (
-                                    <TableRow key={code.id}>
-                                        <TableCell className="font-mono">{code.id}</TableCell>
-                                        <TableCell>{code.email}</TableCell>
-                                        <TableCell>
-                                            <Badge variant={code.isUsed ? 'destructive' : 'default'}>
-                                                {code.isUsed ? 'Usado' : 'Disponível'}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>{code.createdAt}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                        <CodesTable codes={codes} isLoading={isLoading} />
                     </CardContent>
                 </Card>
             </div>

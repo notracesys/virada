@@ -50,21 +50,9 @@ export default function LoginPage() {
       });
       // Redirect to admin dashboard on successful login
       router.push('/admin');
-    } else if (state.message) {
-      // The error alert will be shown, so no need for a toast here
     }
   }, [state, router, toast]);
   
-  // Don't render the form if we are still checking the user or if the user is already logged in
-  if (isUserLoading || user) {
-    return (
-       <div className="relative flex min-h-screen items-center justify-center p-4 bg-background">
-         <AnimatedBackground />
-         <p>Carregando...</p>
-       </div>
-    )
-  }
-
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4 bg-background">
       <AnimatedBackground />
@@ -75,28 +63,30 @@ export default function LoginPage() {
           <CardDescription>Painel Administrativo - Apenas para autorizados.</CardDescription>
         </CardHeader>
         <form action={formAction}>
-          <CardContent className="space-y-4">
-             {state.message && !state.success && (
-                <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Erro de Autenticação</AlertTitle>
-                    <AlertDescription>
-                        {state.message}
-                    </AlertDescription>
-                </Alert>
-            )}
-            <div className="space-y-2">
-              <Label htmlFor="email">E-mail de Acesso</Label>
-              <Input id="email" name="email" type="email" placeholder="user@email.com" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Chave de Segurança</Label>
-              <Input id="password" name="password" type="password" placeholder="************" required />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <SubmitButton />
-          </CardFooter>
+          <fieldset disabled={isUserLoading} className="group">
+            <CardContent className="space-y-4">
+               {state.message && !state.success && (
+                  <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Erro de Autenticação</AlertTitle>
+                      <AlertDescription>
+                          {state.message}
+                      </AlertDescription>
+                  </Alert>
+              )}
+              <div className="space-y-2">
+                <Label htmlFor="email">E-mail de Acesso</Label>
+                <Input id="email" name="email" type="email" placeholder="user@email.com" required />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Chave de Segurança</Label>
+                <Input id="password" name="password" type="password" placeholder="************" required />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <SubmitButton />
+            </CardFooter>
+          </fieldset>
         </form>
       </Card>
     </div>

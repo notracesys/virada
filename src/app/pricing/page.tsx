@@ -78,12 +78,12 @@ export default function PricingPage() {
 
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-4 pt-16 md:pt-4 text-center">
         
-        <header className="mb-8 animate-fade-in-down">
+        <header className="mb-8 animate-fade-in-down pt-16 md:pt-0">
           <h1 className="font-headline text-4xl md:text-5xl font-bold">
             Acesso aos Números da Virada
           </h1>
           <p className="mt-4 text-3xl md:text-4xl font-bold text-yellow-300 tracking-wider">
-            R$ 4,97
+            R$ 14,90
           </p>
           <p className="text-sm text-green-200">Apenas uma única liberação por jogo.</p>
         </header>
@@ -98,7 +98,7 @@ export default function PricingPage() {
             <p className="text-sm text-green-300">Acesso imediato após pagamento</p>
         </div>
         
-        <form onSubmit={handleVerifyCode} className="w-full max-w-sm space-y-4 mb-8">
+        <form onSubmit={handleVerifyCode} className="w-full max-w-sm space-y-4 mb-4">
             <div className="space-y-2 text-left">
                 <Label htmlFor="access-code" className="text-green-200">Já tem um código?</Label>
                 <div className="flex gap-2">
@@ -119,14 +119,14 @@ export default function PricingPage() {
 
         <p className="text-green-200 text-sm mb-4">Caso não tenha um código, clique no botão abaixo para garantir o seu.</p>
         
-        <Button asChild size="lg" className="relative overflow-hidden bg-yellow-400 text-green-900 font-bold hover:bg-yellow-300 rounded-full text-lg px-10 py-6 shadow-lg transition-all duration-300 mb-8">
+        <Button asChild size="lg" className="relative overflow-hidden bg-yellow-400 text-green-900 font-bold hover:bg-yellow-300 rounded-full text-lg px-10 py-6 shadow-lg transition-all duration-300">
           <Link href="https://pay.kirvano.com/CHECKOUT_URL">
             <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent transform -translate-x-full animate-shine" />
             LIBERAR ACESSO
           </Link>
         </Button>
 
-        <div className="text-center space-y-2 max-w-sm text-green-200">
+        <div className="text-center space-y-2 max-w-sm text-green-200 mt-8">
             <p>✓ Resultados gerados pela nossa IA estatística</p>
             <p>✓ Números exclusivos que não aparecem gratuitamente</p>
             <p>✓ Libere o acesso imediato</p>

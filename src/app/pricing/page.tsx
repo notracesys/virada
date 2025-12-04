@@ -3,8 +3,12 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { Lock } from 'lucide-react';
-import { ArrowLeft } from 'lucide-react';
+import { Lock, ArrowLeft } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 const numbers = Array.from({ length: 60 }, (_, i) => i + 1);
 const selectedNumbers = [4, 12, 23, 33, 41, 58, 7, 19, 28, 45, 50, 5, 15, 25, 35];
@@ -43,6 +47,24 @@ function LockedLotteryCard() {
 }
 
 export default function PricingPage() {
+    const router = useRouter();
+    const { toast } = useToast();
+    const [accessCode, setAccessCode] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleVerifyCode = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!accessCode.trim()) {
+            toast({
+                variant: "destructive",
+                title: "Código Inválido",
+                description: "Por favor, insira um código de acesso.",
+            });
+            return;
+        }
+        router.push(`/generate?code=${accessCode}`);
+    };
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-green-600 via-green-800 to-gray-900 text-white">
       <div className="absolute top-4 left-4 z-20">
@@ -76,6 +98,25 @@ export default function PricingPage() {
             <p className="text-sm text-green-300">Acesso imediato após pagamento</p>
         </div>
         
+        <form onSubmit={handleVerifyCode} className="w-full max-w-sm space-y-4 mb-8">
+            <div className="space-y-2 text-left">
+                <Label htmlFor="access-code" className="text-green-200">Já tem um código?</Label>
+                <div className="flex gap-2">
+                    <Input 
+                        id="access-code" 
+                        placeholder="Insira seu código de acesso" 
+                        className="bg-white/10 border-green-400/50 text-white placeholder:text-green-200/70 focus:ring-yellow-400"
+                        value={accessCode}
+                        onChange={(e) => setAccessCode(e.target.value)}
+                        disabled={isLoading}
+                    />
+                    <Button type="submit" variant="secondary" disabled={isLoading}>
+                        {isLoading ? 'Verificando...' : 'Verificar'}
+                    </Button>
+                </div>
+            </div>
+        </form>
+
         <div className="text-center space-y-2 mb-8 max-w-sm text-green-200">
             <p>✓ Resultados gerados pela nossa IA estatística</p>
             <p>✓ Números exclusivos que não aparecem gratuitamente</p>

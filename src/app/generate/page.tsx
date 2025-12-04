@@ -1,65 +1,89 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ProcessingScreen from './components/processing-screen';
 import ResultsScreen from './components/results-screen';
 import { AnimatedBackground } from '@/components/animated-background';
+import { verifyAccessCode } from './actions';
+import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-type Stage = 'initial' | 'processing' | 'results';
+type Stage = 'processing' | 'results' | 'error' | 'loading';
 
 export default function GeneratePage() {
-  const [stage, setStage] = useState<Stage>('initial');
-  const [numbers, setNumbers] = useState<number[]>([]);
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
 
-  const handleStart = () => {
-    setStage('processing');
-  };
+  const [stage, setStage] = useState<Stage>('loading');
+  const [numbers, setNumbers] = useState<number[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (stage === 'processing') {
-      const timer = setTimeout(() => {
-        // Simulação de geração de números
-        const randomNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 60) + 1);
-        const uniqueNumbers = [...new Set(randomNumbers)];
-        while (uniqueNumbers.length < 6) {
-          uniqueNumbers.push(Math.floor(Math.random() * 60) + 1);
-        }
-        setNumbers(uniqueNumbers.sort((a, b) => a - b));
-        setStage('results');
-      }, 4000); // Simula o tempo de processamento
-
-      return () => clearTimeout(timer);
+    const code = searchParams.get('code');
+    if (!code) {
+      setError('Nenhum código de acesso fornecido. Por favor, volte e insira um código.');
+      setStage('error');
+      return;
     }
-  }, [stage]);
+
+    const checkCode = async () => {
+      setStage('processing');
+      try {
+        const result = await verifyAccessCode(code);
+        if (result.success && result.numbers) {
+          setNumbers(result.numbers);
+          setStage('results');
+        } else {
+          setError(result.error || 'Ocorreu um erro desconhecido.');
+          setStage('error');
+          toast({
+            variant: "destructive",
+            title: "Código Inválido",
+            description: result.error,
+          });
+        }
+      } catch (e: any) {
+        setError(e.message || 'Falha ao verificar o código.');
+        setStage('error');
+        toast({
+            variant: "destructive",
+            title: "Erro de Conexão",
+            description: "Não foi possível conectar ao servidor. Tente novamente.",
+        });
+      }
+    };
+
+    checkCode();
+  }, [searchParams, toast]);
 
   const handleReset = () => {
-    setStage('initial');
-    setNumbers([]);
+    // Navigate back to the pricing page to enter another code
+    window.location.href = '/pricing';
   };
+
+  const renderError = () => (
+    <div className="text-center bg-card p-8 rounded-lg shadow-lg border border-destructive">
+      <h1 className="text-2xl font-headline text-destructive mb-4">Acesso Negado</h1>
+      <p className="text-muted-foreground mb-6">{error}</p>
+      <Button asChild>
+        <Link href="/pricing">Tentar Novamente</Link>
+      </Button>
+    </div>
+  );
 
   const renderMainContent = () => {
     switch (stage) {
-      case 'initial':
-        return (
-            <div className="text-center">
-                <h1 className="text-2xl font-headline text-primary mb-4">Pronto para Gerar?</h1>
-                <p className="text-muted-foreground mb-6">Clique no botão abaixo para iniciar a análise da IA.</p>
-                <Button onClick={handleStart} size="lg">Iniciar Geração</Button>
-            </div>
-        )
       case 'processing':
+      case 'loading':
         return <ProcessingScreen />;
       case 'results':
         return <ResultsScreen numbers={numbers} onReset={handleReset} />;
+      case 'error':
+        return renderError();
       default:
-         return (
-            <div className="text-center">
-                <h1 className="text-2xl font-headline text-primary mb-4">Pronto para Gerar?</h1>
-                <p className="text-muted-foreground mb-6">Clique no botão abaixo para iniciar a análise da IA.</p>
-                <Button onClick={handleStart} size="lg">Iniciar Geração</Button>
-            </div>
-        )
+        return <ProcessingScreen />;
     }
   };
 

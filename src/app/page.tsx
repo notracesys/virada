@@ -34,11 +34,11 @@ export default function Home() {
         toast({
           title: (
             <div className="flex items-center gap-2">
-              <PartyPopper className="h-5 w-5 text-primary" />
-              <span className="font-bold">Compra Aprovada!</span>
+              <PartyPopper className="h-5 w-5 text-yellow-400" />
+              <span className="font-bold text-white">Compra Aprovada!</span>
             </div>
           ),
-          description: `${randomSale} acabou de gerar seus números da sorte.`,
+          description: <span className="text-gray-300">{`${randomSale} acabou de gerar seus números.`}</span>,
         });
         showRandomToast(); // Schedule the next one
       }, randomDelay);

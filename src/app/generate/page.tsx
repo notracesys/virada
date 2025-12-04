@@ -11,6 +11,8 @@ import { AlertCircle, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LotteryCard } from './components/lottery-card';
 import { Card, CardContent } from '@/components/ui/card';
+import { Slider } from '@/components/ui/slider';
+import { Label } from '@/components/ui/label';
 
 type Stage = 'payment' | 'processing' | 'results' | 'error';
 
@@ -19,6 +21,7 @@ export default function GeneratePage() {
   const [numbers, setNumbers] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [numberOfNumbers, setNumberOfNumbers] = useState(6);
 
   async function handleGenerate() {
     if (isProcessing) return;
@@ -27,7 +30,8 @@ export default function GeneratePage() {
     setStage('processing');
     
     try {
-      const result = await getMegaNumbersAction();
+      // Pass the selected number of numbers to the action
+      const result = await getMegaNumbersAction(numberOfNumbers);
       await new Promise(resolve => setTimeout(resolve, 3000));
       if (result.numbers) {
         setNumbers(result.numbers.sort((a, b) => a - b));
@@ -49,6 +53,7 @@ export default function GeneratePage() {
     setStage('payment');
     setNumbers([]);
     setError(null);
+    setNumberOfNumbers(6);
   }
 
   const renderMainContent = () => {
@@ -79,10 +84,25 @@ export default function GeneratePage() {
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Acesso aos Números Sugeridos</h1>
             <p className="text-5xl md:text-6xl font-bold text-white mb-2">R$ 4,97</p>
             <p className="text-sm text-green-200 mb-6">Apenas uma única liberação por jogo</p>
-
+            
             <div className="space-y-2 text-sm text-green-100 mb-8">
                 <p>Sugestões geradas por nossa IA estatística</p>
                 <p>Combinações com alta probabilidade estatística</p>
+            </div>
+
+            <div className="bg-card/10 backdrop-blur-sm p-4 rounded-lg my-8 space-y-4">
+              <Label htmlFor="number-selector" className="text-white font-bold text-lg">
+                Quantos números você quer gerar? <span className="text-primary-foreground font-headline text-xl">{numberOfNumbers}</span>
+              </Label>
+              <Slider
+                id="number-selector"
+                min={6}
+                max={15}
+                step={1}
+                value={[numberOfNumbers]}
+                onValueChange={(value) => setNumberOfNumbers(value[0])}
+                className="w-full"
+              />
             </div>
             
             <div className="relative my-8">

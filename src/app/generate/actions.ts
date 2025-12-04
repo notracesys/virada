@@ -2,9 +2,9 @@
 
 import { generateMegaNumbers } from '@/ai/flows/generate-mega-numbers';
 
-export async function getMegaNumbersAction(): Promise<{ numbers?: number[]; error?: string }> {
+export async function getMegaNumbersAction(numberOfNumbers: number): Promise<{ numbers?: number[]; error?: string }> {
   try {
-    const result = await generateMegaNumbers({ userId: 'anonymous' });
+    const result = await generateMegaNumbers({ userId: 'anonymous', numberOfNumbers });
     if (result && result.numbers) {
       return { numbers: result.numbers };
     }

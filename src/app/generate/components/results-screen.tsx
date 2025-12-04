@@ -9,17 +9,19 @@ type ResultsScreenProps = {
 };
 
 export default function ResultsScreen({ numbers, onReset }: ResultsScreenProps) {
+    const gridColsClass = numbers.length > 12 ? 'md:grid-cols-8' : 'md:grid-cols-6';
+
     return (
-        <Card className="w-full max-w-2xl bg-card border text-center">
+        <Card className="w-full max-w-4xl bg-card border text-center">
             <CardHeader>
                 <CardTitle className="font-headline text-3xl text-primary">Sequência Exclusiva Gerada</CardTitle>
                 <CardDescription>Utilize estes números para o seu jogo. Acesso único.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4 my-8">
+                <div className={`grid grid-cols-4 sm:grid-cols-5 ${gridColsClass} gap-2 md:gap-4 my-8`}>
                     {numbers.map((num) => (
                         <div key={num} className="aspect-square flex items-center justify-center bg-primary/10 border-2 border-primary rounded-full">
-                            <span className="text-3xl md:text-4xl font-bold text-foreground">
+                            <span className="text-2xl md:text-3xl font-bold text-foreground">
                                 {num.toString().padStart(2, '0')}
                             </span>
                         </div>

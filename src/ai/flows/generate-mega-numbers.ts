@@ -13,11 +13,12 @@ import {z} from 'genkit';
 
 const GenerateMegaNumbersInputSchema = z.object({
   userId: z.string().describe('The ID of the user requesting the numbers.'),
+  numberOfNumbers: z.number().min(6).max(15).describe('The quantity of numbers to generate.'),
 });
 export type GenerateMegaNumbersInput = z.infer<typeof GenerateMegaNumbersInputSchema>;
 
 const GenerateMegaNumbersOutputSchema = z.object({
-  numbers: z.array(z.number()).length(6).describe('An array of 6 unique numbers between 1 and 60.'),
+  numbers: z.array(z.number()).describe('An array of unique numbers between 1 and 60.'),
 });
 export type GenerateMegaNumbersOutput = z.infer<typeof GenerateMegaNumbersOutputSchema>;
 
@@ -31,11 +32,11 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateMegaNumbersOutputSchema},
   prompt: `You are an AI that generates likely number combinations for the Mega da Virada lottery.
 
-  Generate 6 unique random numbers between 1 and 60. Your generation should be based on statistical analysis of past results and probabilistic models to increase the likelihood of selecting winning numbers.
+  Generate {{{numberOfNumbers}}} unique random numbers between 1 and 60. Your generation should be based on statistical analysis of past results and probabilistic models to increase the likelihood of selecting winning numbers.
   The numbers should be returned in a JSON array.
   Ensure that all numbers are unique and within the specified range.
   Do not repeat numbers.
-  Example of how to format the output:
+  Example of how to format the output for 6 numbers:
   {
    "numbers": [1, 2, 3, 4, 5, 6]
   }

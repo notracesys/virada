@@ -4,9 +4,13 @@ import { generateMegaNumbers } from '@/ai/flows/generate-mega-numbers';
 import { initializeAdminApp } from '@/firebase/admin';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 
-export async function verifyAccessCode(code: string): Promise<{ success: boolean; numbers?: number[]; error?: string; }> {
+export async function verifyAccessCode(code: string, numberOfNumbers: number): Promise<{ success: boolean; numbers?: number[]; error?: string; }> {
     if (!code) {
         return { success: false, error: "Nenhum código de acesso fornecido." };
+    }
+
+    if (!numberOfNumbers || numberOfNumbers < 6 || numberOfNumbers > 15) {
+        return { success: false, error: "Quantidade de números inválida. Escolha de 6 a 15." };
     }
 
     try {
@@ -28,7 +32,7 @@ export async function verifyAccessCode(code: string): Promise<{ success: boolean
             }
 
             // Code is valid and unused, now generate numbers
-            const generationResult = await generateMegaNumbers({ userId: 'user-accessing-now', numberOfNumbers: 6 });
+            const generationResult = await generateMegaNumbers({ userId: 'user-accessing-now', numberOfNumbers });
             
             if (!generationResult || !generationResult.numbers || generationResult.numbers.length === 0) {
                 throw new Error("A IA não conseguiu gerar os números. Tente novamente.");

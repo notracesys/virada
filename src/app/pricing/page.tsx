@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 
 const numbers = Array.from({ length: 60 }, (_, i) => i + 1);
 const selectedNumbers = [4, 12, 23, 33, 41, 58, 7, 19, 28, 45, 50, 5, 15, 25, 35];
@@ -51,6 +53,7 @@ export default function PricingPage() {
     const { toast } = useToast();
     const [accessCode, setAccessCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [numberOfNumbers, setNumberOfNumbers] = useState('6');
 
     const handleVerifyCode = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -63,7 +66,7 @@ export default function PricingPage() {
             return;
         }
         setIsLoading(true);
-        router.push(`/generate?code=${accessCode}`);
+        router.push(`/generate?code=${accessCode}&numbers=${numberOfNumbers}`);
     };
 
   return (
@@ -100,6 +103,19 @@ export default function PricingPage() {
         </div>
         
         <form onSubmit={handleVerifyCode} className="w-full max-w-sm space-y-4 mb-4">
+            <div className="space-y-2 text-left">
+                <Label htmlFor="number-quantity" className="text-green-200">Quantos números deseja gerar?</Label>
+                <Select value={numberOfNumbers} onValueChange={setNumberOfNumbers}>
+                    <SelectTrigger id="number-quantity" className="bg-white/10 border-green-400/50 text-white placeholder:text-green-200/70 focus:ring-yellow-400">
+                        <SelectValue placeholder="Selecione a quantidade" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {Array.from({ length: 10 }, (_, i) => i + 6).map(n => (
+                            <SelectItem key={n} value={String(n)}>{n} números</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
             <div className="space-y-2 text-left">
                 <Label htmlFor="access-code" className="text-green-200">Já tem um código?</Label>
                 <div className="flex gap-2">

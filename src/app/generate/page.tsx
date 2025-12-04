@@ -24,12 +24,15 @@ export default function GeneratePage() {
   const hasVerified = useRef(false);
 
   useEffect(() => {
-    // Se a verificação já ocorreu, não faça nada.
-    if (hasVerified.current) {
+    // Se a verificação já ocorreu ou os números já foram gerados, não faça nada.
+    if (hasVerified.current || numbers.length > 0) {
       return;
     }
 
     const code = searchParams.get('code');
+    const numberOfNumbersStr = searchParams.get('numbers');
+    const numberOfNumbers = numberOfNumbersStr ? parseInt(numberOfNumbersStr, 10) : 6;
+    
     if (!code) {
       setError('Nenhum código de acesso fornecido. Por favor, volte e insira um código.');
       setStage('error');
@@ -41,7 +44,7 @@ export default function GeneratePage() {
       // Marque que a verificação foi iniciada.
       hasVerified.current = true; 
       try {
-        const result = await verifyAccessCode(code);
+        const result = await verifyAccessCode(code, numberOfNumbers);
         if (result.success && result.numbers) {
           setNumbers(result.numbers);
           setStage('results');
@@ -67,7 +70,7 @@ export default function GeneratePage() {
 
     checkCode();
     // A dependência agora é apenas o searchParams, garantindo que rode uma vez por visita.
-  }, [searchParams, toast]);
+  }, [searchParams, numbers.length, toast]);
 
   const handleReset = () => {
     // Navegar para a página de preços para inserir outro código

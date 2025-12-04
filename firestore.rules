@@ -24,19 +24,11 @@ service cloud.firestore {
     
     // -- REGRAS PARA ACCESS CODES --
 
-    // REGRA 1: Permissão para a COLEÇÃO INTEIRA
-    // Permite que o administrador liste os documentos (essencial para as páginas do painel de admin).
-    match /access_codes {
-      allow list: if isSignedIn();
-    }
-
-    // REGRA 2: Permissão para DOCUMENTOS INDIVIDUAIS
-    // Controla o acesso a documentos específicos dentro da coleção.
     match /access_codes/{codeId} {
-        // Admins podem ler (get) e escrever (create, update, delete) em qualquer documento individual.
-        allow get, write: if isAdmin();
+        // Admins podem fazer qualquer operação de leitura (get, list) ou escrita (create, update, delete).
+        allow read, write: if isAdmin();
 
-        // Usuários normais (não-admins) podem APENAS fazer a atualização específica de usar um código.
+        // Usuários normais podem APENAS fazer a atualização específica de usar um código.
         allow update: if isSignedIn()
                      && request.resource.data.isUsed == true
                      && resource.data.isUsed == false

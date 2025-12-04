@@ -60,7 +60,7 @@ export default function Home() {
 
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-white text-foreground">
       
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-4 text-center">
         <div className="mb-4">

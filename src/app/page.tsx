@@ -68,6 +68,13 @@ export default function Home() {
             QUERO GERAR MEUS NÚMEROS
           </Link>
         </Button>
+
+        <div className="mt-16 max-w-3xl text-center text-sm text-muted-foreground px-4">
+          <h3 className="font-bold text-base text-foreground mb-2">Aviso Importante</h3>
+          <p>
+            Os números que você obterá em nosso sistema não são uma garantia de premiação. Eles são sugestões geradas por um sistema de Inteligência Artificial que se baseia em resoluções matemáticas, raciocínio lógico e um profundo estudo estatístico sobre todos os resultados históricos da Mega-Sena, realizado por especialistas. Nosso objetivo é aumentar suas probabilidades, não garantir o resultado. Jogue com responsabilidade.
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-'use server';
 import admin from 'firebase-admin';
 
 // Esta é a função central que garante que o Firebase Admin seja inicializado apenas uma vez.

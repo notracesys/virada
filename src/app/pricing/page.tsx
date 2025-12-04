@@ -119,18 +119,18 @@ export default function PricingPage() {
 
         <p className="text-green-200 text-sm mb-4">Caso não tenha um código, clique no botão abaixo para garantir o seu.</p>
 
-        <div className="text-center space-y-2 mb-8 max-w-sm text-green-200">
-            <p>✓ Resultados gerados pela nossa IA estatística</p>
-            <p>✓ Números exclusivos que não aparecem gratuitamente</p>
-            <p>✓ Libere o acesso imediato</p>
-        </div>
-
-        <Button asChild size="lg" className="relative overflow-hidden group bg-yellow-400 text-green-900 font-bold hover:bg-yellow-300 rounded-full text-lg px-10 py-6 shadow-lg transition-all duration-300">
+        <Button asChild size="lg" className="relative overflow-hidden group bg-yellow-400 text-green-900 font-bold hover:bg-yellow-300 rounded-full text-lg px-10 py-6 shadow-lg transition-all duration-300 mb-8">
           <Link href="https://pay.kirvano.com/CHECKOUT_URL">
             <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent transform -translate-x-full group-hover:animate-shine" />
             LIBERAR ACESSO
           </Link>
         </Button>
+
+        <div className="text-center space-y-2 max-w-sm text-green-200">
+            <p>✓ Resultados gerados pela nossa IA estatística</p>
+            <p>✓ Números exclusivos que não aparecem gratuitamente</p>
+            <p>✓ Libere o acesso imediato</p>
+        </div>
       </div>
     </div>
   );

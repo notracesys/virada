@@ -1,7 +1,3 @@
-// Import dotenv and configure it at the very top.
-import { config } from 'dotenv';
-config();
-
 import admin from 'firebase-admin';
 
 // Esta é a função central que garante que o Firebase Admin seja inicializado apenas uma vez.
@@ -15,7 +11,7 @@ function initializeAdminApp() {
   if (!serviceAccountKey) {
     // Lança o erro apenas quando uma action que depende do admin é executada.
     // Isso evita que a aplicação inteira quebre na inicialização.
-    throw new Error('A variável de ambiente FIREBASE_SERVICE_ACCOUNT_KEY não está definida.');
+    throw new Error('A variável de ambiente FIREBASE_SERVICE_ACCOUNT_KEY não está definida. Verifique o seu arquivo .env');
   }
 
   try {

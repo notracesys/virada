@@ -1,8 +1,11 @@
 'use server';
 
+import { config } from 'dotenv';
 import { generateMegaNumbers } from '@/ai/flows/generate-mega-numbers';
 import { initializeAdminApp } from '@/firebase/admin';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+
+config(); // Carrega as variáveis de ambiente do .env
 
 export async function verifyAccessCode(code: string): Promise<{ success: boolean; numbers?: number[]; error?: string; }> {
     if (!code) {

@@ -78,18 +78,6 @@ export default {
             height: '0',
           },
         },
-        'matrix-rain': {
-          from: {transform: 'translateY(-100vh) scale(1.5)'},
-          to: {transform: 'translateY(100vh) scale(1.5)'},
-        },
-        'logo-entry': {
-          '0%': {opacity: '0', transform: 'scale(0.8)'},
-          '100%': {opacity: '1', transform: 'scale(1)'},
-        },
-        'shine': {
-          'from': { transform: 'translateX(-100%)' },
-          'to': { transform: 'translateX(100%)' },
-        },
         'money-up': {
           '0%': {
             transform: 'translateY(0) rotate(0deg)',
@@ -100,14 +88,16 @@ export default {
             opacity: '0',
           },
         },
+        'shine': {
+          'from': { transform: 'translateX(-100%)' },
+          'to': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'matrix-rain': 'matrix-rain linear infinite',
-        'logo-entry': 'logo-entry 2s ease-out forwards',
-        'shine': 'shine 1.5s ease-out infinite',
         'money-up': 'money-up linear forwards',
+        'shine': 'shine 1.5s ease-out infinite',
       },
     },
   },

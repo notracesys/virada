@@ -62,8 +62,8 @@ export default function Home() {
         <div className="mb-4">
           <Logo className="h-28 w-28 md:h-32 md:w-32" />
         </div>
-        <h1 className="font-headline text-4xl md:text-6xl font-bold text-primary flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
-          <span>MEGA</span> <span>DA VIRADA</span>
+        <h1 className="font-headline text-4xl font-bold tracking-wider text-primary md:text-6xl">
+          MEGA DA VIRADA
         </h1>
         <p className="mt-2 text-lg md:text-xl text-primary">
           Aumente Suas Chances

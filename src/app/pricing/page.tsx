@@ -20,7 +20,7 @@ function LockedLotteryCard() {
     <div className="relative transform -rotate-2">
       <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full max-w-md mx-auto">
         <div className="text-center mb-4">
-          <h2 className="text-xl sm:text-2xl font-bold text-green-700">MEGA DA VIRADA</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-green-700 font-headline tracking-wider">MEGA DA VIRADA</h2>
         </div>
         <div className="grid grid-cols-10 gap-1 sm:gap-2">
           {numbers.map((number) => (
@@ -83,7 +83,7 @@ export default function PricingPage() {
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-4 pt-16 md:pt-4 text-center">
         
         <header className="mb-8 animate-fade-in-down">
-          <h1 className="font-headline text-4xl md:text-5xl font-bold">
+          <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-wider">
             Acesso aos Números da Virada
           </h1>
           <p className="mt-4 text-3xl md:text-4xl font-bold text-yellow-300 tracking-wider">
@@ -127,7 +127,7 @@ export default function PricingPage() {
                         onChange={(e) => setAccessCode(e.target.value)}
                         disabled={isLoading}
                     />
-                    <Button type="submit" variant="secondary" disabled={isLoading} className="min-w-[110px]">
+                    <Button type="submit" variant="secondary" disabled={isLoading}>
                         {isLoading ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -40,22 +40,10 @@ export default function Home() {
         ),
       });
     };
+    
+    const intervalId = setInterval(showRandomToast, 10000);
 
-    // Show the first toast after a short delay
-    const firstTimeout = setTimeout(() => {
-      showRandomToast();
-      // Then set an interval for every 10 seconds
-      const intervalId = setInterval(showRandomToast, 10000);
-
-      // Return a cleanup function for the interval
-      return () => clearInterval(intervalId);
-    }, 5000);
-
-
-    // Cleanup function for the initial timeout
-    return () => {
-      clearTimeout(firstTimeout);
-    };
+    return () => clearInterval(intervalId);
   }, [toast]);
 
 
@@ -76,7 +64,7 @@ export default function Home() {
           <Typewriter text="Sugestões de números com base em análise estatística e IA." speed={50} />
         </div>
         <Button asChild size="lg" className="mt-12 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-4 md:py-6 shadow-lg transition-all duration-300">
-          <Link href="https://pay.kirvano.com/CHECKOUT_URL">
+          <Link href="/pricing">
             QUERO GERAR MEUS NÚMEROS
           </Link>
         </Button>

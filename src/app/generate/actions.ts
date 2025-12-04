@@ -1,8 +1,8 @@
 'use server';
 
 import { generateMegaNumbers } from '@/ai/flows/generate-mega-numbers';
-import admin from '@/firebase/admin';
-import { Timestamp } from 'firebase-admin/firestore';
+import { initializeAdminApp } from '@/firebase/admin';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 
 export async function verifyAccessCode(code: string): Promise<{ success: boolean; numbers?: number[]; error?: string; }> {
     if (!code) {
@@ -10,7 +10,8 @@ export async function verifyAccessCode(code: string): Promise<{ success: boolean
     }
 
     try {
-        const firestore = admin.firestore();
+        initializeAdminApp(); // Garante que o Admin SDK está pronto.
+        const firestore = getFirestore();
         const accessCodeRef = firestore.collection('access_codes').doc(code);
 
         const result = await firestore.runTransaction(async (transaction) => {

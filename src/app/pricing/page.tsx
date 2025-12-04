@@ -117,6 +117,8 @@ export default function PricingPage() {
             </div>
         </form>
 
+        <p className="text-green-200 text-sm mb-4">Caso não tenha um código, clique no botão abaixo para garantir o seu.</p>
+
         <div className="text-center space-y-2 mb-8 max-w-sm text-green-200">
             <p>✓ Resultados gerados pela nossa IA estatística</p>
             <p>✓ Números exclusivos que não aparecem gratuitamente</p>

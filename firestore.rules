@@ -54,8 +54,7 @@ service cloud.firestore {
      */
     match /access_codes/{docId} {
       allow get: if isSignedIn();
-      allow list: if isAdmin();
-      allow create: if isAdmin();
+      allow list, create: if isAdmin();
       allow update: if isSignedIn()
                      && request.resource.data.isUsed == true
                      && resource.data.isUsed == false

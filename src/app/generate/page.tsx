@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getNumbersByAccessCodeAction } from './actions';
+import { AnimatedBackground } from '@/components/animated-background';
 
 type Stage = 'access_code' | 'processing' | 'results' | 'error';
 
@@ -24,9 +25,11 @@ export default function GeneratePage() {
     setStage('processing');
 
     try {
-      const result = await getNumbersByAccessCodeAction(accessCode);
       // Pequeno delay para a tela de processamento ser visível
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const delayPromise = new Promise(resolve => setTimeout(resolve, 3000));
+      const actionPromise = getNumbersByAccessCodeAction(accessCode);
+      
+      const [_, result] = await Promise.all([delayPromise, actionPromise]);
 
       if (result.numbers) {
         setNumbers(result.numbers.sort((a, b) => a - b));
@@ -80,7 +83,8 @@ export default function GeneratePage() {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-4 bg-gradient-to-br from-green-600 via-green-800 to-green-900">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-4 bg-background">
+      <AnimatedBackground />
       <div className="relative z-10 flex w-full flex-col items-center justify-center">
         {renderMainContent()}
       </div>

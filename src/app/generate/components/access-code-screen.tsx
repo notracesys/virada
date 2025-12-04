@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { KeyRound, Loader2 } from "lucide-react";
+import { KeyRound, Loader2, ShoppingCart } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 type AccessCodeScreenProps = {
@@ -23,10 +24,10 @@ export default function AccessCodeScreen({ onVerify, isProcessing }: AccessCodeS
     };
 
     return (
-        <Card className="w-full max-w-sm bg-card border shadow-lg">
+        <Card className="w-full max-w-sm z-10 bg-card border shadow-lg">
             <CardHeader className="text-center">
                 <CardTitle className="font-headline text-2xl text-primary">Revelar Meus Números</CardTitle>
-                <CardDescription>Insira o código que você recebeu por e-mail.</CardDescription>
+                <CardDescription>Insira o código que você recebeu por e-mail após a compra.</CardDescription>
             </CardHeader>
             <form onSubmit={handleSubmit}>
                 <CardContent className="space-y-4">
@@ -57,7 +58,12 @@ export default function AccessCodeScreen({ onVerify, isProcessing }: AccessCodeS
                         )}
                         VERIFICAR E REVELAR
                     </Button>
-                    <p className="text-xs text-muted-foreground">O código é de uso único.</p>
+                     <Button asChild variant="link" className="text-muted-foreground">
+                        <Link href="/">
+                            <ShoppingCart className="mr-2 h-4 w-4" />
+                            Ainda não tenho um código
+                        </Link>
+                    </Button>
                 </CardFooter>
             </form>
         </Card>

@@ -1,7 +1,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { LayoutDashboard, Users, KeyRound, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, KeyRound, LogOut, PanelLeft } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { useUser, useAuth } from '@/firebase';
@@ -102,11 +102,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Sidebar>
           <SidebarInset>
             <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 md:hidden">
-              <SidebarTrigger asChild>
-                <Button size="icon" variant="outline">
-                  <LayoutDashboard className="h-5 w-5" />
-                  <span className="sr-only">Toggle Menu</span>
-                </Button>
+              <SidebarTrigger size="icon" variant="outline">
+                <PanelLeft className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
               </SidebarTrigger>
               <div className="flex items-center gap-2">
                 <Logo className="w-7 h-7" />

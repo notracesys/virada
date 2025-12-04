@@ -33,11 +33,11 @@ export default function Home() {
       setTimeout(() => {
         toast({
           title: (
-            <div className="flex items-center gap-3">
-              <CheckCircle className="h-6 w-6 text-green-400" />
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-400" />
               <div className='flex flex-col'>
-                <span className="font-bold text-white text-sm">Geração Concluída!</span>
-                <span className="text-gray-300 text-xs">{`${randomSale} acabou de gerar seus números.`}</span>
+                <span className="font-bold text-white text-xs">Geração Concluída!</span>
+                <span className="text-gray-300 text-[10px]">{`${randomSale} acabou de gerar seus números.`}</span>
               </div>
             </div>
           ),

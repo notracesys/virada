@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useFormStatus } from 'react';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { login, type LoginState } from './actions';

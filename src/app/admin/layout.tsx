@@ -31,7 +31,7 @@ function AdminAuthWrapper({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // If loading is finished and there's no user, redirect to login
     if (!isUserLoading && !user) {
-      router.push('/login');
+      router.push('/acesso-restrito');
     }
   }, [user, isUserLoading, router]);
 
@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (auth) {
         await signOut(auth);
     }
-    router.push('/login');
+    router.push('/acesso-restrito');
   };
 
   return (

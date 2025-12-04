@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 const NavLink = ({ href, children, isActive = false }: { href: string; children: React.ReactNode; isActive?: boolean }) => (
   <SidebarMenuItem>
-    <SidebarMenuButton asChild isActive={isActive} className={cn(isActive ? "bg-accent/20 text-accent" : "text-primary hover:bg-accent/10 hover:text-accent")}>
+    <SidebarMenuButton asChild isActive={isActive}>
       <Link href={href}>{children}</Link>
     </SidebarMenuButton>
   </SidebarMenuItem>
@@ -15,13 +15,13 @@ const NavLink = ({ href, children, isActive = false }: { href: string; children:
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-black">
+    <div className="bg-background">
       <SidebarProvider>
-        <Sidebar className="border-r border-red-900/50" side="left" collapsible="icon">
+        <Sidebar side="left" collapsible="icon">
           <SidebarHeader className="p-0">
              <div className="flex items-center gap-2 p-4 justify-center">
                 <Logo className="w-8 h-8 flex-shrink-0" />
-                <span className="font-headline text-lg text-primary truncate">Admin Panel</span>
+                <span className="font-headline text-lg text-foreground truncate">Admin Panel</span>
             </div>
           </SidebarHeader>
           <SidebarContent>
@@ -42,7 +42,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </SidebarContent>
         </Sidebar>
         <SidebarInset>
-          <main className="min-h-screen bg-black/80 p-4 lg:p-6">{children}</main>
+          <main className="min-h-screen bg-background p-4 lg:p-6">{children}</main>
         </SidebarInset>
       </SidebarProvider>
     </div>

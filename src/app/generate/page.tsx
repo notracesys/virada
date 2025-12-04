@@ -61,7 +61,7 @@ export default function GeneratePage() {
       case 'error':
         return (
           <div className="w-full max-w-md text-center">
-            <Alert variant="destructive" className="bg-red-900/30 border-accent text-accent-foreground">
+            <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Erro de Geração</AlertTitle>
               <AlertDescription>
@@ -79,7 +79,7 @@ export default function GeneratePage() {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-4">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-4 bg-background">
       <AnimatedBackground />
       <div className="relative z-10 flex w-full flex-col items-center justify-center">
         {renderStage()}

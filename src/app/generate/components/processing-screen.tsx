@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 
 const steps = [
     "Validando solicitação...",
-    "Acesso autorizado. Bypassing firewall...",
-    "Conectando ao banco de dados secreto...",
-    "Analisando 1.2TB de resultados históricos...",
-    "Executando algoritmo preditivo v3.4...",
+    "Acesso autorizado...",
+    "Conectando ao banco de dados da loteria...",
+    "Analisando resultados históricos...",
+    "Executando algoritmo preditivo...",
     "Calculando dezenas de alta probabilidade...",
     "Geração concluída."
 ];
@@ -46,17 +46,17 @@ export default function ProcessingScreen() {
     }, []);
 
     return (
-        <div className="w-full max-w-lg text-center p-4 rounded-lg bg-black/50 border border-accent/50">
-            <h2 className="text-2xl font-headline text-accent mb-4">Analisando...</h2>
-            <div className="font-mono text-primary text-left space-y-2">
+        <div className="w-full max-w-lg text-center p-4 rounded-lg bg-card border">
+            <h2 className="text-2xl font-headline text-primary mb-4">Analisando...</h2>
+            <div className="font-mono text-foreground text-left space-y-2">
                 {steps.slice(0, currentStep + 1).map((step, index) => (
-                    <p key={index} className={index === currentStep ? "text-accent" : "text-primary/70"}>
-                        <span className="text-green-500">&gt; </span>{step}
+                    <p key={index} className={index === currentStep ? "text-primary" : "text-muted-foreground"}>
+                        <span className="text-accent">&gt; </span>{step}
                     </p>
                 ))}
             </div>
-            <Progress value={progress} className="mt-6 h-2 bg-red-900/50 [&>div]:bg-accent" />
-            <p className="text-sm text-muted-foreground mt-2">Hackeando o sistema...</p>
+            <Progress value={progress} className="mt-6 h-2 bg-secondary" />
+            <p className="text-sm text-muted-foreground mt-2">Aguarde um momento...</p>
         </div>
     );
 }

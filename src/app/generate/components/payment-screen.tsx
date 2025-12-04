@@ -10,20 +10,20 @@ type PaymentScreenProps = {
 
 export default function PaymentScreen({ onPay, isProcessing }: PaymentScreenProps) {
     return (
-        <Card className="w-full max-w-sm bg-black/50 border-2 border-green-500/50 shadow-[0_0_20px_rgba(0,255,0,0.3)]">
+        <Card className="w-full max-w-sm bg-card border shadow-lg">
             <CardHeader className="text-center">
-                <CardTitle className="font-headline text-2xl text-green-400">Canal Seguro de Pagamento</CardTitle>
-                <CardDescription className="text-green-400/70">Sua transação é criptografada.</CardDescription>
+                <CardTitle className="font-headline text-2xl text-primary">Canal Seguro de Pagamento</CardTitle>
+                <CardDescription>Sua transação é criptografada.</CardDescription>
             </CardHeader>
             <CardContent className="text-center">
-                <div className="text-4xl font-bold text-primary">R$ 9,99</div>
+                <div className="text-4xl font-bold text-foreground">R$ 9,99</div>
                 <div className="text-sm text-muted-foreground">por Geração de Números</div>
             </CardContent>
             <CardFooter className="flex-col gap-4">
                 <Button 
                     onClick={onPay} 
                     disabled={isProcessing}
-                    className="w-full bg-green-500 text-black hover:bg-green-400 text-lg font-bold"
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-lg font-bold"
                     size="lg"
                 >
                     {isProcessing ? (

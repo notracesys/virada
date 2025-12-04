@@ -16,6 +16,12 @@ service cloud.firestore {
     function isExistingOwner(userId) {
       return isOwner(userId) && resource != null;
     }
+    
+    function isAdmin() {
+      // Allow for a specific admin UID to have elevated privileges
+      // Replace 'YOUR_ADMIN_UID' with the actual UID from Firebase Authentication
+      return request.auth.uid == 'YOUR_ADMIN_UID';
+    }
 
     // Validates that the user's ID in the document data matches the path on create.
     function hasValidUserDataOnCreate(userId) {

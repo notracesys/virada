@@ -83,7 +83,7 @@ export default function PricingPage() {
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-4 pt-16 md:pt-4 text-center">
         
         <header className="mb-8 animate-fade-in-down">
-          <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-wider">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-wider">
             Acesso aos Números da Virada
           </h1>
           <p className="mt-4 text-3xl md:text-4xl font-bold text-yellow-300 tracking-wider">

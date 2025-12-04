@@ -3,11 +3,9 @@
 import { generateMegaNumbers } from '@/ai/flows/generate-mega-numbers';
 import { getFirestore } from 'firebase-admin/firestore';
 import { initializeAdminApp } from '@/firebase/admin';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export async function verifyAccessCode(code: string): Promise<{ success: boolean; numbers?: number[]; error?: string; }> {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
     if (!code) {
         return { success: false, error: "Nenhum código de acesso fornecido." };
     }
@@ -43,7 +41,7 @@ export async function verifyAccessCode(code: string): Promise<{ success: boolean
             transaction.update(accessCodeRef, {
                 isUsed: true,
                 generatedNumbers: finalNumbers,
-                usedAt: new Date(),
+                usedAt: Timestamp.now(),
             });
 
             return { success: true, numbers: finalNumbers };

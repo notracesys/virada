@@ -13,7 +13,7 @@ function generateRandomCode(length: number): string {
     return `MEGA-${result}`;
 }
 
-export async function createAccessCode(formData: FormData): Promise<{ success: boolean; code?: string; error?: string; }> {
+export async function createAccessCode(prevState: any, formData: FormData): Promise<{ success: boolean; code?: string; error?: string; }> {
     const email = formData.get('email') as string;
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -26,6 +26,7 @@ export async function createAccessCode(formData: FormData): Promise<{ success: b
         const accessCodeRef = doc(firestore, 'access_codes', newCode);
 
         await setDoc(accessCodeRef, {
+            id: newCode,
             email: email,
             isUsed: false,
             createdAt: serverTimestamp(),

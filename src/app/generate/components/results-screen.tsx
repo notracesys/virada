@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 type ResultsScreenProps = {
     numbers: number[];
@@ -15,7 +16,7 @@ export default function ResultsScreen({ numbers, onReset }: ResultsScreenProps) 
         <Card className="w-full max-w-4xl bg-card border text-center">
             <CardHeader>
                 <CardTitle className="font-headline text-3xl text-primary">Sequência Exclusiva Gerada</CardTitle>
-                <CardDescription>Utilize estes números para o seu jogo. Acesso único.</CardDescription>
+                <CardDescription>Utilize estes números para o seu jogo. Boa sorte!</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className={`grid grid-cols-4 sm:grid-cols-5 ${gridColsClass} gap-2 md:gap-4 my-8`}>
@@ -29,10 +30,13 @@ export default function ResultsScreen({ numbers, onReset }: ResultsScreenProps) 
                 </div>
             </CardContent>
             <CardFooter className="flex-col gap-4">
-                 <Button onClick={onReset} size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                    Gerar Outro Jogo (Pago)
+                 <Button onClick={onReset} size="lg" variant="outline">
+                    Verificar Outro Código
                 </Button>
-                <p className="text-xs text-muted-foreground">Boa sorte. Não compartilhe seus números.</p>
+                 <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                    <Link href="/">Voltar para o Início</Link>
+                 </Button>
+                <p className="text-xs text-muted-foreground">Não compartilhe seus números.</p>
             </CardFooter>
         </Card>
     );

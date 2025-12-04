@@ -88,21 +88,30 @@ export async function POST(request: Request) {
         if (result && result.numbers) {
             const generatedNumbers = result.numbers.sort((a, b) => a - b);
             console.log('Números gerados com sucesso:', generatedNumbers);
+
+            // Cria a referência para um novo documento na coleção 'generations'
+            const docRef = db.collection('generations').doc();
             
-            // 2. Salve os números gerados no Firestore
+            // O ID do documento será nosso código de acesso único
+            const accessCode = docRef.id;
+
+            // 2. Salve os números gerados e o status no Firestore
             const generationRecord = {
+                accessCode: accessCode, // O código de acesso é o próprio ID do documento
                 userIdentifier: userIdentifier,
                 numbers: generatedNumbers,
                 createdAt: new Date().toISOString(),
                 paymentGateway: 'kirvano',
                 purchaseData: purchaseData, // Salva o payload completo para referência
+                used: false, // Novo campo para controlar se o código já foi usado
             };
 
-            // Cria um novo documento na coleção 'generations'
-            const docRef = await db.collection('generations').add(generationRecord);
-            console.log(`Registro da geração salvo no Firestore com o ID: ${docRef.id}`);
+            // Salva o registro no Firestore usando o ID gerado
+            await docRef.set(generationRecord);
+            console.log(`Registro da geração salvo no Firestore com o ID (código de acesso): ${accessCode}`);
             
             // TODO: Adicionar lógica de envio de e-mail/notificação para o usuário aqui.
+            // O e-mail deve conter o `accessCode` para o usuário poder consultar seus números.
 
         } else {
             console.error('A IA não retornou números. Payload do resultado:', result);

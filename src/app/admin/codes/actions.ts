@@ -26,13 +26,14 @@ export async function createAccessCode(formData: FormData): Promise<{ success: b
 
         const newCode = generateRandomCode(8);
 
-        await addDoc(accessCodesCollection, {
-            id: newCode,
+        // O ID do documento será o próprio código
+        const docRef = await addDoc(accessCodesCollection, {
             email: email,
             isUsed: false,
             createdAt: serverTimestamp(),
             generatedNumbers: null,
             usedAt: null,
+            codeId: newCode, // Armazenando o código no documento
         });
         
         revalidatePath('/admin/codes');

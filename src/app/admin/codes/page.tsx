@@ -19,7 +19,7 @@ async function getAccessCodes(): Promise<AccessCode[]> {
         const codes = querySnapshot.docs.map(doc => {
             const data = doc.data();
             return {
-                id: doc.id,
+                id: data.codeId, // Usando o campo codeId que armazenamos
                 email: data.email,
                 isUsed: data.isUsed,
                 createdAt: data.createdAt?.toDate ? format(data.createdAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : 'N/A',

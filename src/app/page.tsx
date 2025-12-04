@@ -4,7 +4,7 @@ import { Logo } from '@/components/logo';
 import { Typewriter } from '@/components/typewriter';
 import { AnimatedBackground } from '@/components/animated-background';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Clover } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -16,7 +16,6 @@ export default function Home() {
         </div>
         <h1 className="font-headline text-4xl md:text-6xl font-bold text-primary flex items-center justify-center gap-4">
           MEGA DA VIRADA
-          <Clover className="w-10 h-10 md:w-12 md:h-12 text-accent" />
         </h1>
         <p className="mt-2 text-lg md:text-xl text-primary">
           Aumente Suas Chances com IA

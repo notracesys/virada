@@ -48,13 +48,11 @@ service cloud.firestore {
      * @description Controls access to unique, one-time-use access codes.
      * @path /access_codes/{docId}
      * @allow (get, list, create): Admin can manage all access codes.
-     * @allow (get): Any signed-in user can read a specific code to check its status.
      * @allow (update): A code can only be updated if it's being marked as 'used' and wasn't used before.
      * @deny (delete): Codes should not be deletable by clients.
      */
     match /access_codes/{docId} {
-      allow get: if isSignedIn();
-      allow list, create: if isAdmin();
+      allow get, list, create: if isAdmin();
       allow update: if isSignedIn()
                      && request.resource.data.isUsed == true
                      && resource.data.isUsed == false

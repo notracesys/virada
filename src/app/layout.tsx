@@ -14,6 +14,9 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: 'Mega Hacker Virada',
   description: 'Previsões Inteligentes para a Mega da Virada',
+  icons: {
+    icon: '/logo.png',
+  },
 };
 
 export default function RootLayout({

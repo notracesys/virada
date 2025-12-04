@@ -18,9 +18,9 @@ const MoneyParticle = ({ id }: { id: number }) => {
       width: `${initialSize}px`,
       height: `${initialSize}px`,
       opacity: initialOpacity,
-      animationName: 'money-up',
       animationDuration: `${animationDuration}s`,
       animationDelay: `${animationDelay}s`,
+      animationIterationCount: 'infinite',
     });
   }, [id]);
 

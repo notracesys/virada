@@ -92,11 +92,11 @@ export default {
         },
         'money-up': {
           '0%': {
-            transform: 'translateY(100vh) rotate(0deg)',
+            transform: 'translateY(0) rotate(0deg)',
             opacity: '1',
           },
           '100%': {
-            transform: 'translateY(-10vh) rotate(720deg)',
+            transform: 'translateY(-110vh) rotate(720deg)',
             opacity: '0',
           },
         },

@@ -7,8 +7,10 @@ import ProcessingScreen from './components/processing-screen';
 import ResultsScreen from './components/results-screen';
 import { AnimatedBackground } from '@/components/animated-background';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LotteryCard } from './components/lottery-card';
+import { Card, CardContent } from '@/components/ui/card';
 
 type Stage = 'payment' | 'processing' | 'results' | 'error';
 
@@ -26,7 +28,6 @@ export default function GeneratePage() {
     
     try {
       const result = await getMegaNumbersAction();
-      // The processing screen has a minimum animation time, wait for it if API is too fast
       await new Promise(resolve => setTimeout(resolve, 3000));
       if (result.numbers) {
         setNumbers(result.numbers.sort((a, b) => a - b));
@@ -50,10 +51,8 @@ export default function GeneratePage() {
     setError(null);
   }
 
-  const renderStage = () => {
+  const renderMainContent = () => {
     switch (stage) {
-      case 'payment':
-        return <PaymentScreen onPay={handleGenerate} isProcessing={isProcessing} />;
       case 'processing':
         return <ProcessingScreen />;
       case 'results':
@@ -73,16 +72,48 @@ export default function GeneratePage() {
             </Button>
           </div>
         );
+      case 'payment':
       default:
-        return null;
+        return (
+          <div className="w-full max-w-md mx-auto text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Acesso aos Números da Virada</h1>
+            <p className="text-5xl md:text-6xl font-bold text-white mb-2">R$ 4,97</p>
+            <p className="text-sm text-green-200 mb-6">Apenas uma única liberação por jogo</p>
+
+            <div className="space-y-2 text-sm text-green-100 mb-8">
+                <p>Resultados gerados pela nossa IA estatística</p>
+                <p>Números exclusivos que não aparecem gratuitamente</p>
+            </div>
+            
+            <div className="relative my-8">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-2xl backdrop-blur-sm z-10">
+                    <Lock className="w-16 h-16 text-white/50 animate-pulse"/>
+                </div>
+                <LotteryCard />
+            </div>
+
+            <div className="space-y-1 text-xs text-green-200 mb-8">
+                <p>Conteúdo bloqueado</p>
+                <p>Libere para ver os números reais</p>
+            </div>
+            
+            <Button
+              onClick={handleGenerate}
+              disabled={isProcessing}
+              className="w-full h-14 text-lg font-bold bg-yellow-400 text-green-900 hover:bg-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.5)] transition-all duration-300"
+            >
+              {isProcessing ? 'PROCESSANDO...' : 'LIBERAR ACESSO'}
+            </Button>
+             <p className="text-xs text-green-200 mt-2">Acesso imediato após pagamento</p>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-4 bg-background">
-      <AnimatedBackground />
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-4 bg-gradient-to-br from-green-600 via-green-800 to-green-900">
       <div className="relative z-10 flex w-full flex-col items-center justify-center">
-        {renderStage()}
+        {renderMainContent()}
       </div>
     </div>
   );

@@ -46,20 +46,19 @@ service cloud.firestore {
     
     /**
      * @description Collection-level rules for access codes.
-     * @allow (list, create): Admins can list and create codes.
+     * Grants full read/write access to admins, while allowing signed-in users
+     * to perform a one-time update to mark a code as used.
      */
     match /access_codes/{codeId} {
-        // Individual document rules
-        allow get: if isAdmin();
+        // 1. Admins have full read and write permissions. This covers get, list, create, update, delete.
+        allow read, write: if isAdmin();
+
+        // 2. A non-admin signed-in user can ONLY perform a very specific update operation.
+        // This is for consuming an access code.
         allow update: if isSignedIn()
                      && request.resource.data.isUsed == true
                      && resource.data.isUsed == false
-                     && request.resource.data.keys().hasAll(['isUsed', 'generatedNumbers', 'usedAt']);
-        allow create: if isAdmin();
-        allow delete: if false;
-        
-        // Collection-level query rule
-        allow list: if isAdmin();
+                     && request.resource.data.keys().hasAll(['isUsed', 'generatedNumbers', 'usedAt', 'email', 'createdAt']);
     }
   }
 }

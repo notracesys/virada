@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -62,7 +63,8 @@ export default function Home() {
         <div className="mb-4">
           <Logo className="h-28 w-28 md:h-32 md:w-32" />
         </div>
-        <h1 className="font-headline text-4xl font-bold tracking-wider text-primary md:text-6xl">
+        <h1 className="relative overflow-hidden font-headline text-4xl font-bold tracking-wider text-primary md:text-6xl">
+          <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/50 to-transparent transform -translate-x-full animate-shine" />
           MEGA DA VIRADA
         </h1>
         <p className="mt-2 text-lg md:text-xl text-primary">

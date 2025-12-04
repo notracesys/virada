@@ -82,8 +82,9 @@ export default function PricingPage() {
             <p>✓ Libere o acesso imediato</p>
         </div>
 
-        <Button asChild size="lg" className="bg-yellow-400 text-green-900 font-bold hover:bg-yellow-300 rounded-full text-lg px-10 py-6 shadow-lg transition-all duration-300 animate-pulse">
+        <Button asChild size="lg" className="relative overflow-hidden group bg-yellow-400 text-green-900 font-bold hover:bg-yellow-300 rounded-full text-lg px-10 py-6 shadow-lg transition-all duration-300">
           <Link href="https://pay.kirvano.com/CHECKOUT_URL">
+            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent transform -translate-x-full group-hover:animate-shine" />
             LIBERAR ACESSO
           </Link>
         </Button>

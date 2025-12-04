@@ -86,12 +86,17 @@ export default {
           '0%': {opacity: '0', transform: 'scale(0.8)'},
           '100%': {opacity: '1', transform: 'scale(1)'},
         },
+        'shine': {
+          'from': { transform: 'translateX(-100%)' },
+          'to': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'matrix-rain': 'matrix-rain linear infinite',
         'logo-entry': 'logo-entry 2s ease-out forwards',
+        'shine': 'shine 1.5s ease-out',
       },
     },
   },

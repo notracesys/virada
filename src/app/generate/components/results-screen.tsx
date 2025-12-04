@@ -10,7 +10,7 @@ type ResultsScreenProps = {
 };
 
 export default function ResultsScreen({ numbers, onReset }: ResultsScreenProps) {
-    const gridColsClass = numbers.length > 12 ? 'md:grid-cols-8' : 'md:grid-cols-6';
+    const gridColsClass = numbers.length > 12 ? 'grid-cols-5 md:grid-cols-8' : 'grid-cols-3 sm:grid-cols-6';
 
     return (
         <Card className="w-full max-w-4xl bg-card border text-center">
@@ -19,7 +19,7 @@ export default function ResultsScreen({ numbers, onReset }: ResultsScreenProps) 
                 <CardDescription>Utilize estes números para o seu jogo. Boa sorte!</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className={`grid grid-cols-4 sm:grid-cols-5 ${gridColsClass} gap-2 md:gap-4 my-8`}>
+                <div className={`grid ${gridColsClass} gap-2 md:gap-4 my-8`}>
                     {numbers.map((num) => (
                         <div key={num} className="aspect-square flex items-center justify-center bg-primary/10 border-2 border-primary rounded-full">
                             <span className="text-2xl md:text-3xl font-bold text-foreground">
@@ -36,7 +36,7 @@ export default function ResultsScreen({ numbers, onReset }: ResultsScreenProps) 
                  <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
                     <Link href="/">Voltar para o Início</Link>
                  </Button>
-                <p className="text-xs text-muted-foreground">Não compartilhe seus números.</p>
+                <p className="text-xs text-muted-foreground mt-4">Não compartilhe seus números.</p>
             </CardFooter>
         </Card>
     );

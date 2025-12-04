@@ -7,7 +7,7 @@ import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const fakeSales = [
   'Maria S. (SP)',
@@ -24,8 +24,15 @@ const fakeSales = [
 
 export default function Home() {
   const { toast } = useToast();
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const showRandomToast = () => {
       const randomSale = fakeSales[Math.floor(Math.random() * fakeSales.length)];
       toast({
@@ -44,7 +51,7 @@ export default function Home() {
     const intervalId = setInterval(showRandomToast, 10000);
 
     return () => clearInterval(intervalId);
-  }, [toast]);
+  }, [toast, isMounted]);
 
 
   return (
@@ -54,16 +61,16 @@ export default function Home() {
         <div className="mb-4">
           <Logo className="h-28 w-28 md:h-32 md:w-32" />
         </div>
-        <h1 className="font-headline text-4xl md:text-6xl font-bold text-primary flex items-center justify-center gap-4">
-          MEGA DA VIRADA
+        <h1 className="font-headline text-4xl md:text-6xl font-bold text-primary flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
+          <span>MEGA</span> <span>DA VIRADA</span>
         </h1>
         <p className="mt-2 text-lg md:text-xl text-primary">
           Aumente Suas Chances com IA
         </p>
-        <div className="mt-6 h-8 text-base md:text-lg text-muted-foreground">
+        <div className="mt-6 h-12 md:h-8 text-base md:text-lg text-muted-foreground max-w-xs md:max-w-none">
           <Typewriter text="Sugestões de números com base em análise estatística e IA." speed={50} />
         </div>
-        <Button asChild size="lg" className="mt-12 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-4 md:py-6 shadow-lg transition-all duration-300">
+        <Button asChild size="lg" className="mt-12 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-6 shadow-lg transition-all duration-300">
           <Link href="/pricing">
             QUERO GERAR MEUS NÚMEROS
           </Link>

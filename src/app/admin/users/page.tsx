@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { User } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 function UsersTable({ users, isLoading }: { users: User[] | null, isLoading: boolean }) {
     if (isLoading) {
@@ -30,24 +31,26 @@ function UsersTable({ users, isLoading }: { users: User[] | null, isLoading: boo
     }
 
     return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>ID do Usuário</TableHead>
-                    <TableHead>E-mail</TableHead>
-                    <TableHead>Data de Registro</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {users.map((user) => (
-                    <TableRow key={user.id}>
-                        <TableCell className="font-mono">{user.id}</TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell>{user.registrationDate}</TableCell>
+        <ScrollArea className="w-full">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>ID do Usuário</TableHead>
+                        <TableHead>E-mail</TableHead>
+                        <TableHead>Data de Registro</TableHead>
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                </TableHeader>
+                <TableBody>
+                    {users.map((user) => (
+                        <TableRow key={user.id}>
+                            <TableCell className="font-mono whitespace-nowrap">{user.id}</TableCell>
+                            <TableCell>{user.email}</TableCell>
+                            <TableCell className="whitespace-nowrap">{user.registrationDate}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </ScrollArea>
     );
 }
 

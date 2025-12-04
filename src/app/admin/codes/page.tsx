@@ -11,6 +11,7 @@ import { ptBR } from 'date-fns/locale';
 import type { AccessCode } from "@/types";
 import { GenerateCodeForm } from "./components/generate-code-form";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 function CodesTable({ codes, isLoading }: { codes: AccessCode[] | null, isLoading: boolean }) {
     if (isLoading) {
@@ -33,30 +34,32 @@ function CodesTable({ codes, isLoading }: { codes: AccessCode[] | null, isLoadin
     }
 
     return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>Código</TableHead>
-                    <TableHead>E-mail</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Criado em</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {codes.map((code) => (
-                    <TableRow key={code.id}>
-                        <TableCell className="font-mono">{code.id}</TableCell>
-                        <TableCell>{code.email}</TableCell>
-                        <TableCell>
-                            <Badge variant={code.isUsed ? 'destructive' : 'default'}>
-                                {code.isUsed ? 'Usado' : 'Disponível'}
-                            </Badge>
-                        </TableCell>
-                        <TableCell>{code.createdAt}</TableCell>
+        <ScrollArea className="w-full">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Código</TableHead>
+                        <TableHead>E-mail</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Criado em</TableHead>
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                </TableHeader>
+                <TableBody>
+                    {codes.map((code) => (
+                        <TableRow key={code.id}>
+                            <TableCell className="font-mono">{code.id}</TableCell>
+                            <TableCell>{code.email}</TableCell>
+                            <TableCell>
+                                <Badge variant={code.isUsed ? 'destructive' : 'default'}>
+                                    {code.isUsed ? 'Usado' : 'Disponível'}
+                                </Badge>
+                            </TableCell>
+                            <TableCell>{code.createdAt}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </ScrollArea>
     );
 }
 
@@ -73,7 +76,7 @@ export default function AdminCodesPage() {
     const codes: AccessCode[] | null = useMemoFirebase(() => {
         if (!rawCodes) return null;
         return rawCodes.map(doc => ({
-            id: doc.id, // O 'id' do documento do Firestore é usado aqui
+            id: doc.id,
             email: doc.email,
             isUsed: doc.isUsed,
             // @ts-ignore
@@ -91,8 +94,8 @@ export default function AdminCodesPage() {
                 Gerenciar Códigos de Acesso
             </h1>
 
-            <div className="grid gap-6 md:grid-cols-3">
-                <Card className="md:col-span-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-1">
                     <CardHeader>
                         <CardTitle>Gerar Novo Código</CardTitle>
                         <CardDescription>Insira o e-mail do cliente para criar um novo código de acesso único.</CardDescription>
@@ -102,7 +105,7 @@ export default function AdminCodesPage() {
                     </CardContent>
                 </Card>
 
-                <Card className="md:col-span-2">
+                <Card className="lg:col-span-2">
                     <CardHeader>
                         <CardTitle>Códigos Gerados</CardTitle>
                         <CardDescription>Lista de todos os códigos de acesso criados.</CardDescription>

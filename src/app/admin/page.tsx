@@ -70,7 +70,7 @@ export default function AdminDashboard() {
                 Dashboard
             </h1>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard 
                     title="Receita Total" 
                     value={stats.totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
@@ -105,41 +105,43 @@ export default function AdminDashboard() {
                     <CardDescription>As últimas 5 utilizações de códigos de acesso.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>E-mail do Cliente</TableHead>
-                                <TableHead>Números Gerados</TableHead>
-                                <TableHead>Data/Hora</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {isLoading ? (
-                                [...Array(5)].map((_, i) => (
-                                    <TableRow key={i}>
-                                        <TableCell><Skeleton className="h-4 w-48" /></TableCell>
-                                        <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                                    </TableRow>
-                                ))
-                            ) : recentGenerations.length > 0 ? (
-                                recentGenerations.map((gen) => (
-                                    <TableRow key={gen.id}>
-                                        <TableCell className="font-medium">{gen.email}</TableCell>
-                                        <TableCell className="font-mono text-sm">{gen.generatedNumbers?.join(' - ')}</TableCell>
-                                        <TableCell className="text-muted-foreground">
-                                            {/* @ts-ignore */}
-                                            {gen.usedAt?.toDate ? format(gen.usedAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : 'N/A'}
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            ) : (
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
                                 <TableRow>
-                                    <TableCell colSpan={3} className="text-center h-24">Nenhuma geração encontrada.</TableCell>
+                                    <TableHead>E-mail do Cliente</TableHead>
+                                    <TableHead>Números Gerados</TableHead>
+                                    <TableHead>Data/Hora</TableHead>
                                 </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {isLoading ? (
+                                    [...Array(5)].map((_, i) => (
+                                        <TableRow key={i}>
+                                            <TableCell><Skeleton className="h-4 w-48" /></TableCell>
+                                            <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                                            <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : recentGenerations.length > 0 ? (
+                                    recentGenerations.map((gen) => (
+                                        <TableRow key={gen.id}>
+                                            <TableCell className="font-medium">{gen.email}</TableCell>
+                                            <TableCell className="font-mono text-sm whitespace-nowrap">{gen.generatedNumbers?.join(' - ')}</TableCell>
+                                            <TableCell className="text-muted-foreground">
+                                                {/* @ts-ignore */}
+                                                {gen.usedAt?.toDate ? format(gen.usedAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : 'N/A'}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={3} className="text-center h-24">Nenhuma geração encontrada.</TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </CardContent>
             </Card>
         </div>

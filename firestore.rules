@@ -27,7 +27,7 @@ service cloud.firestore {
     // REGRA 1: Permissão para a COLEÇÃO INTEIRA
     // Permite que o administrador liste os documentos (essencial para as páginas do painel de admin).
     match /access_codes {
-      allow list: if isAdmin();
+      allow list: if isSignedIn();
     }
 
     // REGRA 2: Permissão para DOCUMENTOS INDIVIDUAIS

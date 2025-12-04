@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/logo';
 import { Typewriter } from '@/components/typewriter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, PartyPopper } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect } from 'react';
 
@@ -33,12 +33,14 @@ export default function Home() {
       setTimeout(() => {
         toast({
           title: (
-            <div className="flex items-center gap-2">
-              <PartyPopper className="h-5 w-5 text-yellow-400" />
-              <span className="font-bold text-white">Compra Aprovada!</span>
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-6 w-6 text-green-400" />
+              <div className='flex flex-col'>
+                <span className="font-bold text-white text-sm">Nova venda realizada!</span>
+                <span className="text-gray-300 text-xs">{`${randomSale} acabou de gerar seus números.`}</span>
+              </div>
             </div>
           ),
-          description: <span className="text-gray-300">{`${randomSale} acabou de gerar seus números.`}</span>,
         });
         showRandomToast(); // Schedule the next one
       }, randomDelay);

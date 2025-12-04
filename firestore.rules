@@ -34,10 +34,11 @@ service cloud.firestore {
 
     /**
      * @description Controls access to a user's own profile document.
+     * @allow (list): Admins can list all users.
      */
     match /users/{userId} {
       allow get: if isOwner(userId);
-      allow list: if false;
+      allow list: if isAdmin();
       allow create: if isOwner(userId) && hasValidUserDataOnCreate(userId);
       allow update: if isExistingOwner(userId) && isUserDataImmutable();
       allow delete: if false;

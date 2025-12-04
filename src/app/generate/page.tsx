@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProcessingScreen from './components/processing-screen';
 import ResultsScreen from './components/results-screen';
@@ -20,7 +20,15 @@ export default function GeneratePage() {
   const [numbers, setNumbers] = useState<number[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  // Ref para garantir que a verificação rode apenas uma vez.
+  const hasVerified = useRef(false);
+
   useEffect(() => {
+    // Se a verificação já ocorreu, não faça nada.
+    if (hasVerified.current) {
+      return;
+    }
+
     const code = searchParams.get('code');
     if (!code) {
       setError('Nenhum código de acesso fornecido. Por favor, volte e insira um código.');
@@ -30,6 +38,8 @@ export default function GeneratePage() {
 
     const checkCode = async () => {
       setStage('processing');
+      // Marque que a verificação foi iniciada.
+      hasVerified.current = true; 
       try {
         const result = await verifyAccessCode(code);
         if (result.success && result.numbers) {
@@ -56,10 +66,11 @@ export default function GeneratePage() {
     };
 
     checkCode();
+    // A dependência agora é apenas o searchParams, garantindo que rode uma vez por visita.
   }, [searchParams, toast]);
 
   const handleReset = () => {
-    // Navigate back to the pricing page to enter another code
+    // Navegar para a página de preços para inserir outro código
     window.location.href = '/pricing';
   };
 

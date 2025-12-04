@@ -44,17 +44,21 @@ service cloud.firestore {
       allow delete: if false;
     }
     
-    /**
-     * @description Collection-level rules for access codes.
-     * Grants full read/write access to admins, while allowing signed-in users
-     * to perform a one-time update to mark a code as used.
-     */
-    match /access_codes/{codeId} {
-        // 1. Admins have full read and write permissions. This covers get, list, create, update, delete.
-        allow read, write: if isAdmin();
+    // -- REGRAS PARA ACCESS CODES --
 
-        // 2. A non-admin signed-in user can ONLY perform a very specific update operation.
-        // This is for consuming an access code.
+    // REGRA 1: Permissão para a COLEÇÃO INTEIRA
+    // Permite que o administrador liste os documentos (essencial para as páginas do painel de admin).
+    match /access_codes {
+      allow list: if isAdmin();
+    }
+
+    // REGRA 2: Permissão para DOCUMENTOS INDIVIDUAIS
+    // Controla o acesso a documentos específicos dentro da coleção.
+    match /access_codes/{codeId} {
+        // Admins podem ler (get) e escrever (create, update, delete) em qualquer documento individual.
+        allow get, write: if isAdmin();
+
+        // Usuários normais (não-admins) podem APENAS fazer a atualização específica de usar um código.
         allow update: if isSignedIn()
                      && request.resource.data.isUsed == true
                      && resource.data.isUsed == false

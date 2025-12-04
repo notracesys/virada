@@ -1,14 +1,17 @@
-// INSTRUÇÕES:
-// 1. Obtenha o arquivo JSON da sua conta de serviço no Console do Firebase.
-// (Configurações do Projeto > Contas de Serviço > Gerar nova chave privada)
-// 2. Abra o arquivo JSON que você baixou.
-// 3. Copie TODO o conteúdo do arquivo JSON.
-// 4. Substitua o objeto vazio `{}` na linha abaixo pelo conteúdo que você copiou.
+// INSTRUÇÃO IMPORTANTE: NÃO COLE SUAS CREDENCIAIS AQUI!
+// Este arquivo é um placeholder e não deve conter chaves secretas.
 
-// Exemplo: export const serviceAccount = { "type": "service_account", ... };
+// Para que as funções de administrador (como gerar códigos) funcionem em produção,
+// você deve configurar as variáveis de ambiente no seu provedor de hospedagem
+// (Ex: Vercel, Netlify, Firebase App Hosting).
 
-// ATENÇÃO: Nunca comite chaves privadas ou segredos para o seu repositório.
-// Este arquivo foi esvaziado para permitir o push para o GitHub.
-// Para que as funções de admin funcionem em produção, você precisará configurar
-// as credenciais via variáveis de ambiente no seu provedor de hospedagem.
+// As variáveis necessárias são:
+// 1. FIREBASE_PROJECT_ID
+// 2. FIREBASE_CLIENT_EMAIL
+// 3. FIREBASE_PRIVATE_KEY
+
+// Você pode encontrar esses valores no arquivo JSON da conta de serviço que você
+// baixou do console do Firebase. Colocar segredos diretamente no código é uma
+// falha de segurança e será bloqueado pelo seu repositório do GitHub.
+
 export const serviceAccount = {};

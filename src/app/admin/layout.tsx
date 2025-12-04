@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset } from '@/components/ui/sidebar';
-import { LayoutDashboard, Users, Ticket } from 'lucide-react';
+import { LayoutDashboard, Users, Ticket, KeyRound } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -29,6 +29,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <NavLink href="/admin" isActive>
                 <LayoutDashboard />
                 Dashboard
+              </NavLink>
+              <NavLink href="/admin/codes">
+                <KeyRound />
+                Códigos de Acesso
               </NavLink>
               <NavLink href="#">
                 <Users />

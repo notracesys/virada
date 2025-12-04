@@ -1,7 +1,7 @@
 'use server';
 
-import { initializeFirebase } from '@/firebase';
-import { collection, addDoc, serverTimestamp, doc, setDoc } from 'firebase/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
+import { initializeAdminApp } from '@/firebase/admin';
 import { revalidatePath } from 'next/cache';
 
 function generateRandomCode(length: number): string {
@@ -21,15 +21,16 @@ export async function createAccessCode(prevState: any, formData: FormData): Prom
     }
 
     try {
-        const { firestore } = initializeFirebase();
+        initializeAdminApp();
+        const firestore = getFirestore();
         const newCode = generateRandomCode(8);
-        const accessCodeRef = doc(firestore, 'access_codes', newCode);
+        const accessCodeRef = firestore.collection('access_codes').doc(newCode);
 
-        await setDoc(accessCodeRef, {
+        await accessCodeRef.set({
             id: newCode,
             email: email,
             isUsed: false,
-            createdAt: serverTimestamp(),
+            createdAt: new Date(),
             generatedNumbers: null,
             usedAt: null,
         });

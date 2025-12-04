@@ -1,8 +1,8 @@
 'use server';
 
 import { generateMegaNumbers } from '@/ai/flows/generate-mega-numbers';
-import { initializeFirebase } from '@/firebase';
-import { doc, getDoc, runTransaction } from 'firebase/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
+import { initializeAdminApp } from '@/firebase/admin';
 
 export async function verifyAccessCode(code: string): Promise<{ success: boolean; numbers?: number[]; error?: string; }> {
     // Simulate network delay
@@ -13,20 +13,20 @@ export async function verifyAccessCode(code: string): Promise<{ success: boolean
     }
 
     try {
-        const { firestore } = initializeFirebase();
-        const accessCodeRef = doc(firestore, 'access_codes', code);
+        initializeAdminApp();
+        const firestore = getFirestore();
+        const accessCodeRef = firestore.collection('access_codes').doc(code);
 
-        // Use a transaction to ensure atomicity (check and update in one operation)
-        const result = await runTransaction(firestore, async (transaction) => {
+        const result = await firestore.runTransaction(async (transaction) => {
             const accessCodeDoc = await transaction.get(accessCodeRef);
 
-            if (!accessCodeDoc.exists()) {
+            if (!accessCodeDoc.exists) {
                 throw new Error("Código de acesso não encontrado ou inválido.");
             }
 
             const codeData = accessCodeDoc.data();
 
-            if (codeData.isUsed) {
+            if (codeData?.isUsed) {
                 throw new Error("Este código de acesso já foi utilizado.");
             }
 
@@ -43,7 +43,7 @@ export async function verifyAccessCode(code: string): Promise<{ success: boolean
             transaction.update(accessCodeRef, {
                 isUsed: true,
                 generatedNumbers: finalNumbers,
-                usedAt: new Date().toISOString(),
+                usedAt: new Date(),
             });
 
             return { success: true, numbers: finalNumbers };

@@ -65,10 +65,10 @@ export default function Home() {
           <span>MEGA</span> <span>DA VIRADA</span>
         </h1>
         <p className="mt-2 text-lg md:text-xl text-primary">
-          Aumente Suas Chances com IA
+          Aumente Suas Chances
         </p>
         <div className="mt-6 h-12 md:h-8 text-base md:text-lg text-muted-foreground max-w-xs md:max-w-none">
-          <Typewriter text="Sugestões de números com base em análise estatística e IA." speed={50} />
+          <Typewriter text="Este site consiste em números que foram estudados e gerados por especialistas." speed={50} />
         </div>
         <Button asChild size="lg" className="mt-12 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-6 shadow-lg transition-all duration-300">
           <Link href="/pricing">

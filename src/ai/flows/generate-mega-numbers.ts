@@ -29,9 +29,9 @@ const prompt = ai.definePrompt({
   name: 'generateMegaNumbersPrompt',
   input: {schema: GenerateMegaNumbersInputSchema},
   output: {schema: GenerateMegaNumbersOutputSchema},
-  prompt: `You are an AI that generates numbers for the Mega da Virada lottery.
+  prompt: `You are an AI that generates likely number combinations for the Mega da Virada lottery.
 
-  Generate 6 unique random numbers between 1 and 60, based on statistical analysis and probability to increase likelihood of winning.
+  Generate 6 unique random numbers between 1 and 60. Your generation should be based on statistical analysis of past results and probabilistic models to increase the likelihood of selecting winning numbers.
   The numbers should be returned in a JSON array.
   Ensure that all numbers are unique and within the specified range.
   Do not repeat numbers.

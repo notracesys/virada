@@ -22,11 +22,11 @@ export default function Home() {
           Aumente Suas Chances com IA
         </p>
         <div className="mt-6 h-8 text-base md:text-lg text-muted-foreground">
-          <Typewriter text="Números calculados com análise estatística + IA avançada." speed={50} />
+          <Typewriter text="Sugestões de números com base em análise estatística e IA." speed={50} />
         </div>
         <Button asChild size="lg" className="mt-12 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-4 md:py-6 shadow-lg transition-all duration-300">
           <Link href="/generate">
-            GERAR NÚMEROS DA VIRADA (ACESSO PAGO)
+            GERAR NÚMEROS (ACESSO PAGO)
           </Link>
         </Button>
       </div>
@@ -41,35 +41,35 @@ export default function Home() {
             </CardHeader>
             <CardContent className="text-foreground text-base md:text-lg space-y-6">
               <p className="text-center">
-                Nosso sistema não depende de sorte. Utilizamos um algoritmo preditivo proprietário que combina múltiplos vetores de dados para identificar padrões ocultos nos sorteios da Mega da Virada.
+                Nosso sistema não depende apenas de sorte. Utilizamos um algoritmo que combina múltiplos vetores de dados para identificar padrões e probabilidades nos sorteios da Mega da Virada.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-bold">Análise Histórica Profunda</h3>
-                    <p className="text-sm text-muted-foreground">Análise de todos os resultados para identificar dezenas "quentes" e "frias".</p>
+                    <p className="text-sm text-muted-foreground">Análise de todos os resultados para identificar dezenas com maior e menor frequência.</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-bold">Modelagem Probabilística</h3>
-                    <p className="text-sm text-muted-foreground">Cálculos de probabilidade para combinações com maior potencial de sorteio.</p>
+                    <p className="text-sm text-muted-foreground">Cálculos de probabilidade para combinações com maior potencial estatístico.</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-bold">Detecção de Padrões</h3>
-                    <p className="text-sm text-muted-foreground">Uso de machine learning para encontrar padrões matemáticos e sequências.</p>
+                    <p className="text-sm text-muted-foreground">Uso de machine learning para encontrar padrões matemáticos e sequências recorrentes.</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-bold">IA Preditiva</h3>
-                    <p className="text-sm text-muted-foreground">Nossa IA simula milhões de sorteios para refinar as previsões e otimizar suas chances.</p>
+                    <p className="text-sm text-muted-foreground">Nossa IA simula milhões de sorteios para refinar as sugestões e otimizar suas chances.</p>
                   </div>
                 </div>
               </div>

@@ -76,13 +76,13 @@ export default function GeneratePage() {
       default:
         return (
           <div className="w-full max-w-md mx-auto text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Acesso aos Números da Virada</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Acesso aos Números Sugeridos</h1>
             <p className="text-5xl md:text-6xl font-bold text-white mb-2">R$ 4,97</p>
             <p className="text-sm text-green-200 mb-6">Apenas uma única liberação por jogo</p>
 
             <div className="space-y-2 text-sm text-green-100 mb-8">
-                <p>Resultados gerados pela nossa IA estatística</p>
-                <p>Números exclusivos que não aparecem gratuitamente</p>
+                <p>Sugestões geradas por nossa IA estatística</p>
+                <p>Combinações com alta probabilidade estatística</p>
             </div>
             
             <div className="relative my-8">
@@ -94,7 +94,7 @@ export default function GeneratePage() {
 
             <div className="space-y-1 text-xs text-green-200 mb-8">
                 <p>Conteúdo bloqueado</p>
-                <p>Libere para ver os números reais</p>
+                <p>Libere para ver as dezenas sugeridas</p>
             </div>
             
             <Button
@@ -102,7 +102,7 @@ export default function GeneratePage() {
               disabled={isProcessing}
               className="w-full h-14 text-lg font-bold bg-yellow-400 text-green-900 hover:bg-yellow-300 shadow-[0_0_20px_rgba(250,204,21,0.5)] transition-all duration-300"
             >
-              {isProcessing ? 'PROCESSANDO...' : 'LIBERAR ACESSO'}
+              {isProcessing ? 'PROCESSANDO...' : 'LIBERAR SUGESTÕES'}
             </Button>
              <p className="text-xs text-green-200 mt-2">Acesso imediato após pagamento</p>
           </div>

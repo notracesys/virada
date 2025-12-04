@@ -1,7 +1,6 @@
 'use server';
 
-import { getFirestore } from 'firebase-admin/firestore';
-import { initializeAdminApp } from '@/firebase/admin';
+import admin from '@/firebase/admin';
 import { revalidatePath } from 'next/cache';
 
 function generateRandomCode(length: number): string {
@@ -21,8 +20,7 @@ export async function createAccessCode(prevState: any, formData: FormData): Prom
     }
 
     try {
-        initializeAdminApp();
-        const firestore = getFirestore();
+        const firestore = admin.firestore();
         const newCode = generateRandomCode(8);
         const accessCodeRef = firestore.collection('access_codes').doc(newCode);
 

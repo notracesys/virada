@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
+import { MoneyRain } from '@/components/money-rain';
 
 const fakeSales = [
   'Maria S. (SP)',
@@ -56,7 +57,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-white text-foreground">
-      
+      <MoneyRain />
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-4 text-center">
         <div className="mb-4">
           <Logo className="h-28 w-28 md:h-32 md:w-32" />

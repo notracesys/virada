@@ -90,6 +90,16 @@ export default {
           'from': { transform: 'translateX(-100%)' },
           'to': { transform: 'translateX(100%)' },
         },
+        'money-up': {
+          '0%': {
+            transform: 'translateY(100vh) rotate(0deg)',
+            opacity: '1',
+          },
+          '100%': {
+            transform: 'translateY(-10vh) rotate(720deg)',
+            opacity: '0',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -97,6 +107,7 @@ export default {
         'matrix-rain': 'matrix-rain linear infinite',
         'logo-entry': 'logo-entry 2s ease-out forwards',
         'shine': 'shine 1.5s ease-out infinite',
+        'money-up': 'money-up linear forwards',
       },
     },
   },

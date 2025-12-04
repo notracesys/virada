@@ -1,11 +1,8 @@
 'use server';
 
-import { config } from 'dotenv';
 import { initializeAdminApp } from '@/firebase/admin';
 import { getFirestore } from 'firebase-admin/firestore';
 import { revalidatePath } from 'next/cache';
-
-config(); // Carrega as variáveis de ambiente do .env
 
 function generateRandomCode(length: number): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

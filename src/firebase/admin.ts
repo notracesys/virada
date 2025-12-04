@@ -1,4 +1,5 @@
 import admin from 'firebase-admin';
+import { serviceAccount } from './service-account';
 
 // Esta é a função central que garante que o Firebase Admin seja inicializado apenas uma vez.
 function initializeAdminApp() {
@@ -7,21 +8,20 @@ function initializeAdminApp() {
     return admin.app();
   }
 
-  const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  if (!serviceAccountKey) {
+  // Verifica se a conta de serviço foi preenchida
+  if (!serviceAccount || !serviceAccount.project_id) {
     // Lança o erro apenas quando uma action que depende do admin é executada.
-    // Isso evita que a aplicação inteira quebre na inicialização.
-    throw new Error('A variável de ambiente FIREBASE_SERVICE_ACCOUNT_KEY não está definida. Verifique o seu arquivo .env');
+    throw new Error('A conta de serviço do Firebase não está configurada em src/firebase/service-account.ts. Verifique o arquivo.');
   }
 
   try {
-    const serviceAccount = JSON.parse(serviceAccountKey);
     // Inicializa o app e o retorna.
     return admin.initializeApp({
+      // @ts-ignore
       credential: admin.credential.cert(serviceAccount),
     });
   } catch (e: any) {
-    console.error("Falha ao analisar a chave da conta de serviço do Firebase. Verifique se a variável de ambiente está correta.", e);
+    console.error("Falha ao inicializar o Firebase Admin. Verifique o arquivo src/firebase/service-account.ts", e);
     throw new Error('A configuração do Firebase Admin falhou.');
   }
 }

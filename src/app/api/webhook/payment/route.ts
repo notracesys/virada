@@ -1,6 +1,5 @@
 'use server';
 import {NextResponse} from 'next/server';
-import crypto from 'crypto';
 
 /**
  * Endpoint (URL) para receber webhooks da Kirvano.
@@ -10,36 +9,27 @@ import crypto from 'crypto';
  */
 export async function POST(request: Request) {
   try {
-    const rawBody = await request.text();
-    const body = JSON.parse(rawBody);
-
-    // Header que a Kirvano envia. Verifique o nome correto na documentação deles.
-    const signature = request.headers.get('x-kirvano-signature'); 
+    const body = await request.json();
 
     // --- ETAPA DE SEGURANÇA CRUCIAL ---
-    // 1. Obtenha o "Segredo do Webhook" no seu painel da Kirvano.
-    // 2. Adicione-o como uma variável de ambiente (ex: KIRVANO_WEBHOOK_SECRET).
-    const kirvanoWebhookSecret = process.env.KIRVANO_WEBHOOK_SECRET;
+    // 1. Obtenha o "Token" que você configurou no painel da Kirvano.
+    const kirvanoToken = process.env.KIRVANO_WEBHOOK_TOKEN;
+    
+    // 2. A Kirvano envia o token em um cabeçalho. O nome do cabeçalho pode variar.
+    //    Estou usando 'x-kirvano-token' como um exemplo provável. Verifique na documentação.
+    const receivedToken = request.headers.get('x-kirvano-token');
 
-    if (!kirvanoWebhookSecret) {
-        console.error('ERRO: O segredo do webhook da Kirvano (KIRVANO_WEBHOOK_SECRET) não está configurado nas variáveis de ambiente.');
-        // Em produção, é melhor retornar um erro genérico para não expor detalhes.
+    if (!kirvanoToken) {
+        console.error('ERRO: O token do webhook da Kirvano (KIRVANO_WEBHOOK_TOKEN) não está configurado nas variáveis de ambiente.');
         return NextResponse.json({error: 'Configuração interna do servidor incorreta.'}, {status: 500});
     }
-    
-    // 3. Calcule a assinatura esperada.
-    // A Kirvano usa HMAC-SHA256. Isso cria um código com base no corpo da requisição e na sua chave secreta.
-    const expectedSignature = crypto
-        .createHmac('sha256', kirvanoWebhookSecret)
-        .update(rawBody)
-        .digest('hex');
 
-    // 4. Compare a assinatura recebida com a que você calculou.
-    // DESCOMENTE A LINHA ABAIXO QUANDO TIVER SUA CHAVE SECRETA.
-    // if (signature !== expectedSignature) {
-    //   console.warn('Assinatura de webhook inválida. A requisição pode ser fraudulenta.');
-    //   return NextResponse.json({error: 'Assinatura inválida'}, {status: 401});
-    // }
+    // 3. Compare o token recebido com o que você salvou.
+    //    Esta é a verificação para garantir que a requisição veio mesmo da Kirvano.
+    if (receivedToken !== kirvanoToken) {
+      console.warn('Token de webhook inválido. A requisição pode ser fraudulenta.');
+      return NextResponse.json({error: 'Token inválido'}, {status: 401});
+    }
     
     console.log('Webhook da Kirvano recebido e validado com sucesso:', body);
 

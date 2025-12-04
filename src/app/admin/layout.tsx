@@ -72,7 +72,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <SidebarHeader className="p-0">
                <div className="flex items-center gap-2 p-4 justify-center">
                   <Logo className="w-8 h-8 flex-shrink-0" />
-                  <span className="font-headline text-lg text-foreground truncate">Admin Panel</span>
+                  <span className="font-headline text-lg text-foreground truncate">Notracesys</span>
               </div>
             </SidebarHeader>
             <SidebarContent>

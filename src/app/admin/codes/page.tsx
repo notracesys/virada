@@ -73,7 +73,7 @@ export default function AdminCodesPage() {
     const codes: AccessCode[] | null = useMemoFirebase(() => {
         if (!rawCodes) return null;
         return rawCodes.map(doc => ({
-            id: doc.codeId,
+            id: doc.id, // O 'id' do documento do Firestore é usado aqui
             email: doc.email,
             isUsed: doc.isUsed,
             // @ts-ignore

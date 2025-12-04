@@ -89,10 +89,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Users />
                   Usuários
                 </NavLink>
-                <NavLink href="/admin/generations">
-                  <Ticket />
-                  Gerações
-                </NavLink>
               </SidebarMenu>
             </SidebarContent>
              <SidebarMenu>

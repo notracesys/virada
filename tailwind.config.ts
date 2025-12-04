@@ -18,7 +18,7 @@ export default {
     extend: {
       fontFamily: {
         body: ['Roboto', 'sans-serif'],
-        headline: ['"Bebas Neue"', 'sans-serif'],
+        headline: ['Anton', 'sans-serif'],
         code: ['"Source Code Pro"', 'monospace'],
       },
       colors: {

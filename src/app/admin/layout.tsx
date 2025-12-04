@@ -5,19 +5,24 @@ import { LayoutDashboard, Users, Ticket, KeyRound, LogOut } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { useUser, useAuth } from '@/firebase';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { signOut } from 'firebase/auth';
 
-const NavLink = ({ href, children, isActive = false }: { href: string; children: React.ReactNode; isActive?: boolean }) => (
-  <SidebarMenuItem>
-    <SidebarMenuButton asChild isActive={isActive}>
-      <Link href={href}>{children}</Link>
-    </SidebarMenuButton>
-  </SidebarMenuItem>
-);
+const NavLink = ({ href, children }: { href: string; children: React.ReactNode; }) => {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton asChild isActive={isActive}>
+        <Link href={href}>{children}</Link>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+};
 
 function AdminAuthWrapper({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
@@ -53,7 +58,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
 
   const handleLogout = async () => {
-    await signOut(auth);
+    if (auth) {
+        await signOut(auth);
+    }
     router.push('/login');
   };
 
@@ -70,7 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </SidebarHeader>
             <SidebarContent>
               <SidebarMenu>
-                <NavLink href="/admin" isActive>
+                <NavLink href="/admin">
                   <LayoutDashboard />
                   Dashboard
                 </NavLink>
@@ -78,11 +85,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <KeyRound />
                   Códigos de Acesso
                 </NavLink>
-                <NavLink href="#">
+                <NavLink href="/admin/users">
                   <Users />
                   Usuários
                 </NavLink>
-                <NavLink href="#">
+                <NavLink href="/admin/generations">
                   <Ticket />
                   Gerações
                 </NavLink>

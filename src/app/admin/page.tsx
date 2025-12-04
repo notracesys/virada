@@ -1,6 +1,7 @@
+
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DollarSign, Users, KeyRound, Ticket, Activity } from "lucide-react";
 import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
@@ -55,7 +56,7 @@ export default function AdminDashboard() {
         return codes
             .filter(c => c.isUsed && c.usedAt)
             // @ts-ignore - usedAt can be a timestamp, we convert to date for sorting
-            .sort((a, b) => new Date(b.usedAt) - new Date(a.usedAt))
+            .sort((a, b) => (b.usedAt?.toDate() || 0) - (a.usedAt?.toDate() || 0))
             .slice(0, 5);
     }, [codes]);
 
@@ -128,7 +129,7 @@ export default function AdminDashboard() {
                                         <TableCell className="font-mono text-sm">{gen.generatedNumbers?.join(' - ')}</TableCell>
                                         <TableCell className="text-muted-foreground">
                                             {/* @ts-ignore */}
-                                            {gen.usedAt ? format(new Date(gen.usedAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : 'N/A'}
+                                            {gen.usedAt?.toDate ? format(gen.usedAt.toDate(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : 'N/A'}
                                         </TableCell>
                                     </TableRow>
                                 ))

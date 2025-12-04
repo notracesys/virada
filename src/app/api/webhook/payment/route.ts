@@ -12,7 +12,7 @@ import crypto from 'crypto';
  * 1. No seu painel da Kirvano, configure a URL deste webhook: `https://<seu-site>/api/webhook/payment`.
  * 2. Obtenha o "Segredo do Webhook" (Webhook Secret) no painel da Kirvano.
  * 3. Adicione esse segredo como uma variável de ambiente no seu projeto (ex: KIRVANO_WEBHOOK_SECRET).
- * 4. Implemente a lógica de verificação de assinatura (passo de segurança crucial).
+ * 4. Descomente e valide a lógica de verificação de assinatura (passo de segurança crucial).
  * 5. Adapte a lógica para extrair os dados corretos do corpo da requisição (`body`).
  */
 export async function POST(request: Request) {

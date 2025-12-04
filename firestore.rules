@@ -1,33 +1,6 @@
 /**
- * This ruleset enforces a strict user-ownership model for the 'Mega Hacker Virada'
- * application. All user-related data, including number generation requests and
- * payment transactions, is stored in a hierarchical structure to ensure privacy
- * and security.
- *
- * Core Philosophy:
- * A user has exclusive read and write access to their own data. Access is
- * determined by matching the authenticated user's ID (`request.auth.uid`) with
- * the `{userId}` wildcard in the document path. This prevents any user from
- * accessing or even listing the data of another user.
- *
- * Data Structure:
- * All user data is nested under the `/users/{userId}` path. This includes the
- * user's profile document and subcollections for their private data, such as
- * `numberGenerationRequests` and `paymentTransactions`. This structure is
- * designed for secure, performant, and scalable access control.
- *
- * Key Security Decisions:
- * - No Global Access: There are no global read or write rules. All access is
- *   explicitly granted based on user ownership.
- * - No User Listing: The top-level `/users` collection is not queryable,
- *   preventing malicious actors from listing all users in the application.
- * - Ownership is Immutable: Once a document is created, its ownership link
- *   (e.g., the `userId` field within the document) cannot be changed. This
- *   prevents documents from being "re-assigned" to another user.
- * - Denormalization for Authorization: To ensure fast and simple rules, each
- *   document within a user's data tree (e.g., a PaymentTransaction) contains
- *   a `userId` field. This allows rules to validate ownership without costly `get()`
- *   calls to parent documents, a core principle for performance and security.
+ * This ruleset enforces a strict user-ownership model and manages access codes
+ * for the 'Mega Hacker Virada' application.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -54,63 +27,34 @@ service cloud.firestore {
       return request.resource.data.id == resource.data.id;
     }
 
-    // Validates that the owner ID in a subcollection document matches the path on create.
-    function hasValidOwnerLinkOnCreate(userId) {
-      return request.resource.data.userId == userId;
-    }
-    
-    // Enforces that the owner ID in a subcollection document is immutable on update.
-    function isOwnerLinkImmutable() {
-      return request.resource.data.userId == resource.data.userId;
-    }
-
     /**
      * @description Controls access to a user's own profile document.
-     * @path /users/{userId}
-     * @allow (create) A new user with auth.uid 'user123' creates their own profile at /users/user123.
-     * @allow (get) An authenticated user 'user123' reads their own profile at /users/user123.
-     * @deny (create) A user 'user456' tries to create a profile for 'user123' at /users/user123.
-     * @deny (delete) A user is not allowed to delete their own root profile document.
-     * @principle Restricts access to a user's own data tree and allows self-creation of a profile.
      */
     match /users/{userId} {
       allow get: if isOwner(userId);
       allow list: if false;
       allow create: if isOwner(userId) && hasValidUserDataOnCreate(userId);
       allow update: if isExistingOwner(userId) && isUserDataImmutable();
-      allow delete: if false; // Disallow users from deleting their own root document.
+      allow delete: if false;
+    }
 
-      /**
-       * @description Controls access to a user's number generation requests.
-       * @path /users/{userId}/numberGenerationRequests/{numberGenerationRequestId}
-       * @allow (create) User 'user123' creates a new request at /users/user123/numberGenerationRequests/req_abc.
-       * @allow (list) User 'user123' lists all of their requests under /users/user123/numberGenerationRequests.
-       * @deny (get) User 'user456' tries to read a request at /users/user123/numberGenerationRequests/req_abc.
-       * @deny (update) User 'user456' tries to update a request at /users/user123/numberGenerationRequests/req_abc.
-       * @principle Enforces strict ownership for all documents within a user's private subcollection.
-       */
-      match /numberGenerationRequests/{numberGenerationRequestId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && hasValidOwnerLinkOnCreate(userId);
-        allow update: if isExistingOwner(userId) && isOwnerLinkImmutable();
-        allow delete: if isExistingOwner(userId);
-      }
-
-      /**
-       * @description Controls access to a user's payment transaction history.
-       * @path /users/{userId}/paymentTransactions/{paymentTransactionId}
-       * @allow (create) User 'user123' creates a new payment record at /users/user123/paymentTransactions/tx_abc.
-       * @allow (list) User 'user123' lists all of their transactions under /users/user123/paymentTransactions.
-       * @deny (get) User 'user456' tries to read a transaction at /users/user123/paymentTransactions/tx_abc.
-       * @deny (delete) User 'user456' tries to delete a transaction at /users/user123/paymentTransactions/tx_abc.
-       * @principle Enforces strict ownership for all documents within a user's private subcollection.
-       */
-      match /paymentTransactions/{paymentTransactionId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && hasValidOwnerLinkOnCreate(userId);
-        allow update: if isExistingOwner(userId) && isOwnerLinkImmutable();
-        allow delete: if isExistingOwner(userId);
-      }
+    /**
+     * @description Controls access to unique, one-time-use access codes.
+     * @path /access_codes/{codeId}
+     * @allow (get) Any authenticated client can read a code to check its status.
+     * @allow (update) A code can only be updated if it's being marked as 'used' and wasn't used before.
+     * @deny (create) Code creation should be handled by a trusted server/admin.
+     * @deny (delete) Codes should not be deletable by clients.
+     */
+    match /access_codes/{codeId} {
+      allow get: if isSignedIn();
+      allow list: if false;
+      allow create: if false; // Should be created via server/console
+      allow update: if isSignedIn()
+                     && request.resource.data.isUsed == true
+                     && resource.data.isUsed == false
+                     && request.resource.data.keys().hasAll(['isUsed', 'generatedNumbers', 'usedAt']);
+      allow delete: if false;
     }
   }
 }

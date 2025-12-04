@@ -23,7 +23,7 @@ export default function Home() {
         <div className="mt-6 h-8 text-base md:text-lg text-primary">
           <Typewriter text="Números calculados com análise estatística + IA avançada." speed={50} />
         </div>
-        <Button asChild size="lg" className="mt-12 bg-accent text-accent-foreground hover:bg-accent/90 rounded-full text-lg font-bold px-10 py-6 shadow-[0_0_20px_theme(colors.accent)] hover:shadow-[0_0_30px_theme(colors.accent)] transition-all duration-300">
+        <Button asChild size="lg" className="mt-12 bg-accent text-accent-foreground hover:bg-accent/90 rounded-full text-base md:text-lg font-bold px-8 md:px-10 py-4 md:py-6 shadow-[0_0_20px_theme(colors.accent)] hover:shadow-[0_0_30px_theme(colors.accent)] transition-all duration-300">
           <Link href="/generate">
             GERAR NÚMEROS DA VIRADA (ACESSO PAGO)
           </Link>

@@ -71,9 +71,9 @@ export default function PricingPage() {
         </div>
 
         <div className="space-y-2 text-green-100 mb-8">
-            <p>“Conteúdo bloqueado”</p>
-            <p className="font-bold">“Libere para ver os números reais”</p>
-            <p className="text-sm text-green-300">“Acesso imediato após pagamento”</p>
+            <p>Conteúdo bloqueado</p>
+            <p className="font-bold">Libere para ver os números reais</p>
+            <p className="text-sm text-green-300">Acesso imediato após pagamento</p>
         </div>
         
         <div className="text-center space-y-2 mb-8 max-w-sm text-green-200">

@@ -1,7 +1,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset } from '@/components/ui/sidebar';
-import { LayoutDashboard, Users, Ticket, KeyRound, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, KeyRound, LogOut } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Link from 'next/link';
 import { useUser, useAuth } from '@/firebase';

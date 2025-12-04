@@ -127,7 +127,7 @@ export default function PricingPage() {
         </Button>
 
         <div className="text-center space-y-2 max-w-sm text-green-200 mt-8">
-            <p>✓ Resultados gerados pela nossa IA estatística</p>
+            <p>✓ Resultados gerados por especialistas</p>
             <p>✓ Números exclusivos que não aparecem gratuitamente</p>
             <p>✓ Libere o acesso imediato</p>
         </div>

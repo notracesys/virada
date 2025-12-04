@@ -1,33 +1,5 @@
 'use server';
 import {NextResponse} from 'next/server';
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { generateMegaNumbers } from '@/ai/flows/generate-mega-numbers';
-
-// --- INICIALIZAÇÃO DO FIREBASE ADMIN SDK ---
-// O SDK Admin é usado no servidor (como em webhooks) para ter acesso privilegiado
-// ao seu banco de dados, diferente do SDK do cliente que roda no navegador.
-
-// Carrega as credenciais de serviço do Firebase a partir de uma variável de ambiente.
-// Você precisa criar esta variável de ambiente (FIREBASE_SERVICE_ACCOUNT_KEY)
-// e colar o conteúdo do seu arquivo JSON de credencial de serviço nela.
-// O conteúdo do JSON deve ser uma string única, sem quebras de linha.
-const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
-  ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-  : null;
-
-// Inicializa o app do Firebase apenas se ainda não foi inicializado.
-if (!getApps().length) {
-  if (serviceAccount) {
-    initializeApp({
-      credential: cert(serviceAccount),
-    });
-  } else {
-    console.error('ERRO: Credenciais do Firebase (FIREBASE_SERVICE_ACCOUNT_KEY) não encontradas. O webhook não pode se conectar ao Firestore.');
-  }
-}
-
-const db = getFirestore();
 
 /**
  * Endpoint (URL) para receber webhooks da Kirvano.
@@ -61,67 +33,19 @@ export async function POST(request: Request) {
     const eventType = body.event_type; // Este é um exemplo, o nome pode ser outro.
 
     if (eventType === 'purchase.approved') {
-      if (!serviceAccount) {
-         console.error('Processamento de compra aprovada falhou: Conexão com Firebase não está configurada.');
-         // Responde 200 para a Kirvano não reenviar, mas registra o erro.
-         return NextResponse.json({ received: true, error: 'Firebase not configured' }, { status: 200 });
-      }
-        
       const purchaseData = body.data;
       console.log(`Compra aprovada! Dados:`, purchaseData);
 
-      // --- LÓGICA DO APLICATIVO ---
-      
-      // TODO: Adapte esta linha para pegar a quantidade de números do produto comprado na Kirvano.
-      // Por exemplo: const numberOfNumbers = purchaseData.product.metadata.numbers_to_generate || 6;
-      const numberOfNumbers = 6; 
+      // --- LÓGICA DO SEU APLICATIVO ---
+      // Esta é a área onde você adicionaria sua lógica de negócios. Por exemplo:
+      // a. Encontre o pedido/usuário no seu banco de dados (Firestore) usando um ID.
+      // b. Marque o pedido como "PAGO".
+      // c. Chame a função da IA para gerar os números (`generateMegaNumbers`).
+      // d. Salve os números gerados no banco de dados junto com o pedido.
+      // e. Envie um e-mail/notificação para o usuário avisando que os números estão prontos.
 
-      // TODO: Adapte esta linha para pegar um identificador único do cliente.
-      // Por exemplo: const userIdentifier = purchaseData.customer.email;
-      const userIdentifier = purchaseData?.customer?.email || 'unknown_user';
-
-      try {
-        // 1. Chame a função da IA para gerar os números
-        console.log(`Gerando ${numberOfNumbers} números para ${userIdentifier}...`);
-        const result = await generateMegaNumbers({ userId: userIdentifier, numberOfNumbers });
-        
-        if (result && result.numbers) {
-            const generatedNumbers = result.numbers.sort((a, b) => a - b);
-            console.log('Números gerados com sucesso:', generatedNumbers);
-
-            // Cria a referência para um novo documento na coleção 'generations'
-            const docRef = db.collection('generations').doc();
-            
-            // O ID do documento será nosso código de acesso único
-            const accessCode = docRef.id;
-
-            // 2. Salve os números gerados e o status no Firestore
-            const generationRecord = {
-                accessCode: accessCode, // O código de acesso é o próprio ID do documento
-                userIdentifier: userIdentifier,
-                numbers: generatedNumbers,
-                createdAt: new Date().toISOString(),
-                paymentGateway: 'kirvano',
-                purchaseData: purchaseData, // Salva o payload completo para referência
-                used: false, // Novo campo para controlar se o código já foi usado
-            };
-
-            // Salva o registro no Firestore usando o ID gerado
-            await docRef.set(generationRecord);
-            console.log(`Registro da geração salvo no Firestore com o ID (código de acesso): ${accessCode}`);
-            
-            // TODO: Adicionar lógica de envio de e-mail/notificação para o usuário aqui.
-            // O e-mail deve conter o `accessCode` para o usuário poder consultar seus números.
-
-        } else {
-            console.error('A IA não retornou números. Payload do resultado:', result);
-        }
-      } catch (aiError) {
-        console.error('Erro ao chamar a IA ou salvar no Firestore:', aiError);
-        // Mesmo com erro interno, respondemos 200 para não receber o webhook novamente.
-        // O erro já foi logado para análise.
-      }
-      
+      // Por enquanto, apenas registramos o sucesso.
+      console.log('A lógica de aplicativo para processar a compra aprovada iria aqui.');
 
     } else {
       console.log(`Evento da Kirvano não processado recebido: ${eventType}`);

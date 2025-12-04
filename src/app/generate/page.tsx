@@ -1,56 +1,38 @@
 'use client';
 
-import { useState } from 'react';
-import AccessCodeScreen from './components/access-code-screen';
+import { useState, useEffect } from 'react';
 import ProcessingScreen from './components/processing-screen';
 import ResultsScreen from './components/results-screen';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { getNumbersByAccessCodeAction } from './actions';
 import { AnimatedBackground } from '@/components/animated-background';
 
-type Stage = 'access_code' | 'processing' | 'results' | 'error';
+type Stage = 'processing' | 'results';
 
 export default function GeneratePage() {
-  const [stage, setStage] = useState<Stage>('access_code');
+  const [stage, setStage] = useState<Stage>('processing');
+  // Números de exemplo para exibir quando o processamento terminar
   const [numbers, setNumbers] = useState<number[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
 
-  async function handleVerifyCode(accessCode: string) {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    setError(null);
-    setStage('processing');
-
-    try {
-      // Pequeno delay para a tela de processamento ser visível
-      const delayPromise = new Promise(resolve => setTimeout(resolve, 3000));
-      const actionPromise = getNumbersByAccessCodeAction(accessCode);
-      
-      const [_, result] = await Promise.all([delayPromise, actionPromise]);
-
-      if (result.numbers) {
-        setNumbers(result.numbers.sort((a, b) => a - b));
-        setStage('results');
-      } else {
-        setError(result.error || 'Falha ao verificar o código. Tente novamente.');
-        setStage('error');
+  useEffect(() => {
+    // Simula um processo de geração
+    const timer = setTimeout(() => {
+      // Gera 6 números aleatórios entre 1 e 60
+      const randomNumbers = Array.from({ length: 6 }, () => Math.floor(Math.random() * 60) + 1);
+      // Garante que são únicos
+      const uniqueNumbers = [...new Set(randomNumbers)];
+      while(uniqueNumbers.length < 6) {
+        uniqueNumbers.push(Math.floor(Math.random() * 60) + 1);
       }
-    } catch (e) {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setError('Erro de conexão com o servidor de análise. Tente novamente.');
-      setStage('error');
-    } finally {
-      setIsProcessing(false);
-    }
-  }
+      
+      setNumbers(uniqueNumbers.sort((a, b) => a - b));
+      setStage('results');
+    }, 4000); // 4 segundos para a animação de processamento
 
-  function handleReset() {
-    setStage('access_code');
-    setNumbers([]);
-    setError(null);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleReset = () => {
+    // Recarrega a página para simular uma nova geração
+     window.location.reload();
   }
 
   const renderMainContent = () => {
@@ -59,26 +41,8 @@ export default function GeneratePage() {
         return <ProcessingScreen />;
       case 'results':
         return <ResultsScreen numbers={numbers} onReset={handleReset} />;
-      case 'error':
-        return (
-          <div className="w-full max-w-md text-center">
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Erro de Validação</AlertTitle>
-              <AlertDescription>
-                {error}
-              </AlertDescription>
-            </Alert>
-            <Button onClick={handleReset} className="mt-8" variant="secondary">
-              Tentar Novamente
-            </Button>
-          </div>
-        );
-      case 'access_code':
       default:
-        return (
-          <AccessCodeScreen onVerify={handleVerifyCode} isProcessing={isProcessing} />
-        );
+        return <ProcessingScreen />;
     }
   };
 

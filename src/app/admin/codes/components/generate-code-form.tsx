@@ -1,8 +1,8 @@
 'use client';
 
 import { createAccessCode } from '../actions';
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect, useRef } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useActionState, useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,7 @@ function SubmitButton() {
 }
 
 export function GenerateCodeForm() {
-  const [state, formAction] = useFormState(createAccessCode, initialState);
+  const [state, formAction] = useActionState(createAccessCode, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
 

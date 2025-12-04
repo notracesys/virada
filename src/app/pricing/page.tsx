@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { Lock, ArrowLeft } from 'lucide-react';
+import { Lock, ArrowLeft, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
@@ -62,6 +62,7 @@ export default function PricingPage() {
             });
             return;
         }
+        setIsLoading(true);
         router.push(`/generate?code=${accessCode}`);
     };
 
@@ -110,8 +111,15 @@ export default function PricingPage() {
                         onChange={(e) => setAccessCode(e.target.value)}
                         disabled={isLoading}
                     />
-                    <Button type="submit" variant="secondary" disabled={isLoading}>
-                        {isLoading ? 'Verificando...' : 'Verificar'}
+                    <Button type="submit" variant="secondary" disabled={isLoading} className="min-w-[110px]">
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Verificando...
+                            </>
+                        ) : (
+                            'Verificar'
+                        )}
                     </Button>
                 </div>
             </div>

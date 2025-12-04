@@ -18,9 +18,8 @@ service cloud.firestore {
     }
     
     function isAdmin() {
-      // Allow for a specific admin UID to have elevated privileges
-      // Replace 'YOUR_ADMIN_UID' with the actual UID from Firebase Authentication
-      return request.auth.uid == 'YOUR_ADMIN_UID';
+      // The admin UID with elevated privileges.
+      return request.auth.uid == 'Q1IUkKWf7cTBKmeSLK2hGonabwV2';
     }
 
     // Validates that the user's ID in the document data matches the path on create.
@@ -46,16 +45,16 @@ service cloud.firestore {
 
     /**
      * @description Controls access to unique, one-time-use access codes.
-     * @path /access_codes/{codeId}
-     * @allow (get) Any authenticated client can read a code to check its status.
-     * @allow (update) A code can only be updated if it's being marked as 'used' and wasn't used before.
-     * @deny (create) Code creation should be handled by a trusted server/admin.
-     * @deny (delete) Codes should not be deletable by clients.
+     * @path /access_codes/{docId}
+     * @allow (get, list, create): Admin can manage all access codes.
+     * @allow (get): Any signed-in user can read a specific code to check its status.
+     * @allow (update): A code can only be updated if it's being marked as 'used' and wasn't used before.
+     * @deny (delete): Codes should not be deletable by clients.
      */
-    match /access_codes/{codeId} {
+    match /access_codes/{docId} {
       allow get: if isSignedIn();
-      allow list: if false;
-      allow create: if false; // Should be created via server/console
+      allow list: if isAdmin();
+      allow create: if isAdmin();
       allow update: if isSignedIn()
                      && request.resource.data.isUsed == true
                      && resource.data.isUsed == false

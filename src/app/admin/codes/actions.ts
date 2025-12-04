@@ -1,7 +1,7 @@
 'use server';
 
 import { initializeFirebase } from '@/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, setDoc } from 'firebase/firestore';
 import { revalidatePath } from 'next/cache';
 
 function generateRandomCode(length: number): string {
@@ -22,18 +22,15 @@ export async function createAccessCode(formData: FormData): Promise<{ success: b
 
     try {
         const { firestore } = initializeFirebase();
-        const accessCodesCollection = collection(firestore, 'access_codes');
-
         const newCode = generateRandomCode(8);
+        const accessCodeRef = doc(firestore, 'access_codes', newCode);
 
-        // O ID do documento será o próprio código
-        const docRef = await addDoc(accessCodesCollection, {
+        await setDoc(accessCodeRef, {
             email: email,
             isUsed: false,
             createdAt: serverTimestamp(),
             generatedNumbers: null,
             usedAt: null,
-            codeId: newCode, // Armazenando o código no documento
         });
         
         revalidatePath('/admin/codes');

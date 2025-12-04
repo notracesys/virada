@@ -4,7 +4,7 @@ import { Logo } from '@/components/logo';
 import { Typewriter } from '@/components/typewriter';
 import { AnimatedBackground } from '@/components/animated-background';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Clover } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -14,16 +14,17 @@ export default function Home() {
         <div className="mb-4">
           <Logo className="h-28 w-28 md:h-32 md:w-32" />
         </div>
-        <h1 className="font-headline text-4xl md:text-6xl font-bold text-primary" style={{ textShadow: '0 0 15px hsl(var(--accent))' }}>
-          MEGA HACKER VIRADA
+        <h1 className="font-headline text-4xl md:text-6xl font-bold text-primary flex items-center justify-center gap-4" style={{ textShadow: '0 0 15px hsl(var(--accent))' }}>
+          MEGA DA VIRADA
+          <Clover className="w-10 h-10 md:w-12 md:h-12 text-accent" />
         </h1>
         <p className="mt-2 text-lg md:text-xl text-accent">
-          Previsões Inteligentes • Acesso Restrito
+          Aumente Suas Chances com IA
         </p>
         <div className="mt-6 h-8 text-base md:text-lg text-primary">
           <Typewriter text="Números calculados com análise estatística + IA avançada." speed={50} />
         </div>
-        <Button asChild size="lg" className="mt-12 bg-accent text-accent-foreground hover:bg-accent/90 rounded-full text-sm md:text-lg font-bold px-6 py-4 md:px-10 md:py-6 shadow-[0_0_20px_theme(colors.accent)] hover:shadow-[0_0_30px_theme(colors.accent)] transition-all duration-300">
+        <Button asChild size="lg" className="mt-12 bg-accent text-accent-foreground hover:bg-accent/90 rounded-full text-sm font-bold px-6 py-4 md:text-lg md:px-8 md:py-6 shadow-[0_0_20px_theme(colors.accent)] hover:shadow-[0_0_30px_theme(colors.accent)] transition-all duration-300">
           <Link href="/generate">
             GERAR NÚMEROS DA VIRADA (ACESSO PAGO)
           </Link>
